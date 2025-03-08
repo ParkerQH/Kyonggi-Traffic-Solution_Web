@@ -1,7 +1,8 @@
+<%@page import="java.time.Period"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="java.util.Date, java.text.SimpleDateFormat, java.util.Locale"%>
+	import="java.util.Date, java.text.SimpleDateFormat, java.util.Locale, java.time.LocalDate, java.time.format.DateTimeFormatter"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,11 +97,11 @@
 					<p>HOME</p>
 					<%
 					// 현재 날짜 가져오기
-					Date now = new Date();
-					SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMMM dd", Locale.ENGLISH); // "2025 March 08" 형식
-					String formattedDate = sdf.format(now);
+					LocalDate today = LocalDate.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
+					String todayDate = today.format(formatter);
 					%>
-					<p class="time"><%=formattedDate%></p>
+					<p class="time"><%=todayDate%></p>
 				</div>
 				<div class="projects-section-line">
 					<%--신고 접수 건수를 보여주는 부분--%>
@@ -145,7 +146,11 @@
 					<div class="project-box-wrapper">
 						<div class="project-box" style="background-color: #fee4cb;">
 							<div class="project-box-header">
-								<span>March 01, 2025</span>
+								<%
+								LocalDate twoDaysAgo = LocalDate.now().minusDays(2);	//<변경>예시 데이터(2일 전 날짜)
+								String exDate = twoDaysAgo.format(formatter); 
+								%>
+								<span><%= exDate %></span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -169,8 +174,11 @@
 								<p class="box-progress-percentage">60%</p>
 							</div>
 							<div class="project-box-footer">
-								
-								<div class="days-left" style="color: #ff942e;">2 일전
+							<%
+							Period period = Period.between(twoDaysAgo, today);	//<변경> 예시 데이터
+							int daysBetween = period.getDays();
+							%>
+								<div class="days-left" style="color: #ff942e;"><%= daysBetween %> 일전
 								</div>
 							</div>
 						</div>
@@ -179,7 +187,7 @@
 					<div class="project-box-wrapper">
 						<div class="project-box" style="background-color: #ffd3e2;">
 							<div class="project-box-header">
-								<span>March 01, 2025</span>
+								<span><%= exDate %></span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -203,7 +211,7 @@
 								<p class="box-progress-percentage">20%</p>
 							</div>
 							<div class="project-box-footer">
-								<div class="days-left" style="color: #df3670;">2 일전
+								<div class="days-left" style="color: #df3670;"><%= daysBetween %> 일전
 								</div>
 							</div>
 						</div>
@@ -211,7 +219,7 @@
 					<div class="project-box-wrapper">
 						<div class="project-box" style="background-color: #c8f7dc;">
 							<div class="project-box-header">
-								<span>March 01, 2025</span>
+								<span><%= exDate %></span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -235,7 +243,7 @@
 								<p class="box-progress-percentage">60%</p>
 							</div>
 							<div class="project-box-footer">
-								<div class="days-left" style="color: #34c471;">2 일전
+								<div class="days-left" style="color: #34c471;"><%= daysBetween %> 일전
 								</div>
 							</div>
 						</div>
@@ -243,10 +251,9 @@
 					<div class="project-box-wrapper">
 						<div class="project-box" style="background-color: #d5deff;">
 							<div class="project-box-header">
-								<span>March 01, 2025</span>
+								<span><%= exDate %></span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
-
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
 											stroke-width="2" stroke-linecap="round"
@@ -269,7 +276,7 @@
 								<p class="box-progress-percentage">40%</p>
 							</div>
 							<div class="project-box-footer">
-								<div class="days-left" style="color: #4067f9;">2 일전
+								<div class="days-left" style="color: #4067f9;"><%= daysBetween %> 일전
 								</div>
 							</div>
 						</div>
@@ -306,7 +313,7 @@
 								</div>
 							</div>
 							<p class="message-line">최근 증가하는 전동킥보드 사고를 예방하기 위해...</p>
-							<p class="message-line time">Dec, 12</p>
+							<p class="message-line time">Mar, 01</p>
 						</div>
 					</div>
 
