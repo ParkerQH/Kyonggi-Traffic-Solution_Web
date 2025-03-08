@@ -1,2 +1,2 @@
-# Konggi Traffic Solution 관리자용 Website
+# Konggi Traffic Solution Web
 관리자용 웹사이트
