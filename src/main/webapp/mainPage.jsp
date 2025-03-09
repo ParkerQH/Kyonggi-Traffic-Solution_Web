@@ -111,6 +111,9 @@
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
 					String todayDate = today.format(formatter);
+					PreparedStatement pstmt = null;
+					ResultSet rs, rt = null;
+					int count = 0;
 					%>
 					<p class="time"><%=todayDate%></p>
 				</div>
@@ -118,14 +121,43 @@
 					<%--신고 접수 건수를 보여주는 부분--%>
 					<div class="projects-status">
 						<div class="item-status">
-							<span class="status-number">5</span> <span class="status-type">In
-								Progress</span>
+							<%
+							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result IS NULL;";
+							pstmt = conn.prepareStatement(sql);
+							rs = pstmt.executeQuery();
+
+							if (rs.next()) {
+								count = rs.getInt(1);
+							}
+							%>
+							<span class="status-number"><%=count%></span> <span
+								class="status-type">In Progress</span>
 						</div>
 						<div class="item-status">
-							<span class="status-number">20</span> <span class="status-type">Completed</span>
+							<%
+							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result IS NOT NULL;";
+							pstmt = conn.prepareStatement(sql);
+							rs = pstmt.executeQuery();
+
+							if (rs.next()) {
+								count = rs.getInt(1);
+							}
+							%>
+							<span class="status-number"><%=count%></span> <span
+								class="status-type">Completed</span>
 						</div>
 						<div class="item-status">
-							<span class="status-number">25</span> <span class="status-type">Total</span>
+							<%
+							sql = "SELECT COUNT(*) FROM report";
+							pstmt = conn.prepareStatement(sql);
+							rs = pstmt.executeQuery();
+
+							if (rs.next()) {
+								count = rs.getInt(1);
+							}
+							%>
+							<span class="status-number"><%=count%></span> <span
+								class="status-type">Total</span>
 						</div>
 					</div>
 					<div class="view-actions">
@@ -155,13 +187,11 @@
 				</div>
 				<div class="project-boxes jsGridView">
 					<%
-					PreparedStatement pstmt = null;
-					ResultSet rs = null;
 					int n = 0;
 					String backgroud;
 					String bar;
 					try {
-						String sql = "SELECT * FROM report";
+						sql = "SELECT * FROM report";
 						pstmt = conn.prepareStatement(sql);
 						rs = pstmt.executeQuery();
 
@@ -209,13 +239,12 @@
 								<div class="more-wrapper">
 									<%
 									try {
-										ResultSet rt = null;
 										sql = "SELECT * FROM conclusion WHERE report_id = ?";
 										pstmt = conn.prepareStatement(sql);
 										pstmt.setInt(1, reportId);
 										rt = pstmt.executeQuery();
 
-										while (rt.next()) {
+										if (rt.next()) {
 											String result = rt.getString("result");
 											float accuracy = rt.getFloat("accuracy");
 									%>
@@ -281,10 +310,11 @@
 							</div>
 							<%
 							}
-							if (rt != null)
-							rt.close();
 							} catch (SQLException e) {
 							e.printStackTrace();
+							} finally {
+							if (rt != null)
+							rt.close();
 							}
 							%>
 							<div class="project-box-footer">
