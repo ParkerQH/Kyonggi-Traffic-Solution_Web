@@ -157,19 +157,49 @@
 					<%
 					PreparedStatement pstmt = null;
 					ResultSet rs = null;
+					int n = 0;
+					String backgroud;
+					String bar;
 					try {
 						String sql = "SELECT * FROM report";
 						pstmt = conn.prepareStatement(sql);
 						rs = pstmt.executeQuery();
 
 						while (rs.next()) {
+							int reportId = rs.getInt("report_id");
 							String region = rs.getString("region");
 							String date = rs.getString("date");
 							String title = rs.getString("title");
 							String content = rs.getString("content");
+
+							if (n % 6 == 0) {
+						backgroud = "#fee4cb";
+						bar = "#ff942e";
+						n++;
+							} else if (n % 6 == 1) {
+						backgroud = "#e9e7fd";
+						bar = "#4f3ff0";
+						n++;
+							} else if (n % 6 == 2) {
+						backgroud = "#dbf6fd";
+						bar = "#096c86";
+						n++;
+							} else if (n % 6 == 3) {
+						backgroud = "#ffd3e2";
+						bar = "#df3670";
+						n++;
+							} else if (n % 6 == 4) {
+						backgroud = "#c8f7dc";
+						bar = "#34c471";
+						n++;
+							} else {
+						backgroud = "#d5deff";
+						bar = "#4067f9";
+						n = 0;
+							}
 					%>
 					<div class="project-box-wrapper">
-						<div class="project-box" style="background-color: #fee4cb;">
+						<div class="project-box" style="background-color: <%=backgroud%>;">
 							<div class="project-box-header">
 								<%
 								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
@@ -177,33 +207,92 @@
 								%>
 								<span><%=exDate%></span>
 								<div class="more-wrapper">
+									<%
+									try {
+										ResultSet rt = null;
+										sql = "SELECT * FROM conclusion WHERE report_id = ?";
+										pstmt = conn.prepareStatement(sql);
+										pstmt.setInt(1, reportId);
+										rt = pstmt.executeQuery();
+
+										while (rt.next()) {
+											String result = rt.getString("result");
+											float accuracy = rt.getFloat("accuracy");
+									%>
 									<button class="project-btn-more">
+										<%
+										if (result.equals("승인")) {
+										%>
+
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" class="feather feather-check-circle">
+											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+											<polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+										<%
+										} else if (result.equals("반려")) {
+										%>
+
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" class="feather feather-x-circle">
+											<circle cx="12" cy="12" r="10"></circle>
+											<line x1="15" y1="9" x2="9" y2="15"></line>
+											<line x1="9" y1="9" x2="15" y2="15"></line></svg>
+										<%
+										} else if (result.equals("미결")) {
+										%>
+
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" class="feather feather-help-circle">
+											<circle cx="12" cy="12" r="10"></circle>
+											<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+											<line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+										<%
+										} else if (result.isEmpty()) {
+										%>
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
 											stroke-width="2" stroke-linecap="round"
 											stroke-linejoin="round" class="feather feather-circle">
 											<circle cx="12" cy="12" r="10"></circle></svg>
+										<%
+										}
+										%>
 									</button>
 								</div>
 							</div>
 							<div class="project-box-content-header">
-								<p class="box-content-header"><%=title %></p>
-								<p class="box-content-subheader"><%=content %></p>
+								<p class="box-content-header"><%=title%></p>
+								<p class="box-content-subheader"><%=content%></p>
 							</div>
 							<div class="box-progress-wrapper">
 								<p class="box-progress-header">Accuracy</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
-										style="width: 60%; background-color: #ff942e"></span>
+										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
 								</div>
-								<p class="box-progress-percentage">60%</p>
+								<p class="box-progress-percentage"><%=(int) (accuracy * 100)%>%
+								</p>
 							</div>
+							<%
+							}
+							if (rt != null)
+							rt.close();
+							} catch (SQLException e) {
+							e.printStackTrace();
+							}
+							%>
 							<div class="project-box-footer">
 								<%
 								Period period = Period.between(reportDate, today); //<변경> 예시 데이터
 								int daysBetween = period.getDays();
 								%>
-								<div class="days-left" style="color: #ff942e;"><%=daysBetween%>
+								<div class="days-left" style="color: <%=bar%>;"><%=daysBetween%>
 									일전
 								</div>
 							</div>
