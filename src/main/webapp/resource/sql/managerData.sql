@@ -1,0 +1,9 @@
+USE KTSDB;
+
+CREATE TABLE IF NOT EXISTS manager (
+    manager_id VARCHAR(20) NOT NULL UNIQUE,
+    pw VARCHAR(50) NOT NULL,
+    region VARCHAR(50) NOT NULL,
+    class VARCHAR(50) NOT NULL,
+    PRIMARY KEY (manager_id)
+) DEFAULT CHARSET=utf8;
