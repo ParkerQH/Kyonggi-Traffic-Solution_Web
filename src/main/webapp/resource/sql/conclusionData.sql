@@ -17,7 +17,13 @@ CREATE TABLE IF NOT EXISTS Conclusion (
 INSERT INTO Conclusion (result, accuracy, fine, date, analytical_picture, manager_ID, report_ID) VALUES
 ('승인', 0.86, 40000, '2025-02-26', 'analysis1.jpg', 'admin1', 1),
 ('반려', 0.89, 0, '2025-03-01', 'analysis2.jpg','admin2', 2),
-('승인', 0.68, 20000, '2025-03-01', 'analysis3.jpg','admin3', 3);
+('승인', 0.68, 20000, '2025-03-01', 'analysis3.jpg','admin1', 3),
+('미결', 0.72, 0, '2025-03-02', 'analysis4.jpg','admin2', 4),
+('반려', 0.49, 0, '2025-03-02', 'analysis5.jpg','admin3', 5),
+('승인', 0.68, 20000, '2025-03-03', 'analysis6.jpg','admin3', 6),
+('승인', 0.88, 30000, '2025-03-04', 'analysis7.jpg','admin3', 7),
+('반려', 0.52, 0, '2025-03-04', 'analysis8.jpg','admin3', 8);
+
 
 DESC Conclusion;
 SELECT * FROM Conclusion;

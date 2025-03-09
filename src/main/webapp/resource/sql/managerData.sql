@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Manager (
 INSERT INTO Manager(manager_id, name, pw, region, class) VALUES
 ('admin1', '김철수', '1234', '수원', '순경'),
 ('admin2', '이영희', '1234', '수원', '경장'),
-('admin3', '박민준', '1234', '동탄', '순경');
+('admin3', '박민준', '1234', '화성', '순경');
 
 
 DESC Manager;
