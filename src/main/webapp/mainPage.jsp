@@ -3,6 +3,8 @@
 	pageEncoding="UTF-8"%>
 <%@ page
 	import="java.util.Date, java.text.SimpleDateFormat, java.util.Locale, java.time.LocalDate, java.time.format.DateTimeFormatter"%>
+<%@ page import="java.sql.*"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +15,7 @@
 <link rel="stylesheet" href="resource/css/style.css">
 </head>
 <body>
+	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
 		<div class="app-header">
 			<div class="app-header-left">
@@ -151,12 +154,26 @@
 					</div>
 				</div>
 				<div class="project-boxes jsGridView">
+					<%
+					PreparedStatement pstmt = null;
+					ResultSet rs = null;
+					try {
+						String sql = "SELECT * FROM report";
+						pstmt = conn.prepareStatement(sql);
+						rs = pstmt.executeQuery();
+
+						while (rs.next()) {
+							String region = rs.getString("region");
+							String date = rs.getString("date");
+							String title = rs.getString("title");
+							String content = rs.getString("content");
+					%>
 					<div class="project-box-wrapper">
 						<div class="project-box" style="background-color: #fee4cb;">
 							<div class="project-box-header">
 								<%
-								LocalDate twoDaysAgo = LocalDate.now().minusDays(2); //<변경>예시 데이터(2일 전 날짜)
-								String exDate = twoDaysAgo.format(formatter);
+								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
+								String exDate = reportDate.format(formatter);
 								%>
 								<span><%=exDate%></span>
 								<div class="more-wrapper">
@@ -170,8 +187,8 @@
 								</div>
 							</div>
 							<div class="project-box-content-header">
-								<p class="box-content-header">헬멧 미착용</p>
-								<p class="box-content-subheader">2025-03-01 경기도 수원시 장안구</p>
+								<p class="box-content-header"><%=title %></p>
+								<p class="box-content-subheader"><%=content %></p>
 							</div>
 							<div class="box-progress-wrapper">
 								<p class="box-progress-header">Accuracy</p>
@@ -183,7 +200,7 @@
 							</div>
 							<div class="project-box-footer">
 								<%
-								Period period = Period.between(twoDaysAgo, today); //<변경> 예시 데이터
+								Period period = Period.between(reportDate, today); //<변경> 예시 데이터
 								int daysBetween = period.getDays();
 								%>
 								<div class="days-left" style="color: #ff942e;"><%=daysBetween%>
@@ -192,109 +209,17 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="project-box-wrapper">
-						<div class="project-box" style="background-color: #ffd3e2;">
-							<div class="project-box-header">
-								<span><%=exDate%></span>
-								<div class="more-wrapper">
-									<button class="project-btn-more">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-x-circle">
-											<circle cx="12" cy="12" r="10"></circle>
-											<line x1="15" y1="9" x2="9" y2="15"></line>
-											<line x1="9" y1="9" x2="15" y2="15"></line></svg>
-									</button>
-								</div>
-							</div>
-							<div class="project-box-content-header">
-								<p class="box-content-header">2인 탑승</p>
-								<p class="box-content-subheader">2025-03-01 경기도 수원시 팔달구</p>
-							</div>
-							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Accuracy</p>
-								<div class="box-progress-bar">
-									<span class="box-progress"
-										style="width: 20%; background-color: #df3670"></span>
-								</div>
-								<p class="box-progress-percentage">20%</p>
-							</div>
-							<div class="project-box-footer">
-								<div class="days-left" style="color: #df3670;"><%=daysBetween%>
-									일전
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="project-box-wrapper">
-						<div class="project-box" style="background-color: #c8f7dc;">
-							<div class="project-box-header">
-								<span><%=exDate%></span>
-								<div class="more-wrapper">
-									<button class="project-btn-more">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-circle">
-											<circle cx="12" cy="12" r="10"></circle></svg>
-									</button>
-								</div>
-							</div>
-							<div class="project-box-content-header">
-								<p class="box-content-header">인도 주행</p>
-								<p class="box-content-subheader">2025-03-01 경기도 수원시 팔달구</p>
-							</div>
-							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Accuracy</p>
-								<div class="box-progress-bar">
-									<span class="box-progress"
-										style="width: 60%; background-color: #34c471"></span>
-								</div>
-								<p class="box-progress-percentage">60%</p>
-							</div>
-							<div class="project-box-footer">
-								<div class="days-left" style="color: #34c471;"><%=daysBetween%>
-									일전
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="project-box-wrapper">
-						<div class="project-box" style="background-color: #d5deff;">
-							<div class="project-box-header">
-								<span><%=exDate%></span>
-								<div class="more-wrapper">
-									<button class="project-btn-more">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-check-circle">
-											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-											<polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-									</button>
-								</div>
-							</div>
-							<div class="project-box-content-header">
-								<p class="box-content-header">헬멧 미착용</p>
-								<p class="box-content-subheader">2025-03-01 경기도 수원시 영통구</p>
-							</div>
-							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Accuracy</p>
-								<div class="box-progress-bar">
-									<span class="box-progress"
-										style="width: 40%; background-color: #4067f9"></span>
-								</div>
-								<p class="box-progress-percentage">40%</p>
-							</div>
-							<div class="project-box-footer">
-								<div class="days-left" style="color: #4067f9;"><%=daysBetween%>
-									일전
-								</div>
-							</div>
-						</div>
-					</div>
+					<%
+					}
+					} catch (SQLException e) {
+					e.printStackTrace();
+					} finally {
+					if (rs != null)
+					rs.close();
+					if (pstmt != null)
+					pstmt.close();
+					}
+					%>
 				</div>
 			</div>
 			<div class="messages-section">
