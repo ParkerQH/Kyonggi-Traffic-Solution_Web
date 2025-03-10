@@ -20,9 +20,7 @@ INSERT INTO Report (region, date, title, content, picture, user_id) VALUES
 ('화성', '2025-03-02', '헬멧 미착용','화성종합경기타운 전방에서 헬멧 미착용', 'pic5.jpg', 'park123'),
 ('화성', '2025-03-03', '2인 주행','매양교회 인근에서 2인 주행', 'pic6.jpg', 'park123'),
 ('화성', '2025-03-04', '헬멧 미착용','철쭉공원 전방 횡단보도에서 헬멧 미착용', 'pic7.jpg', 'kim123'),
-('화성', '2025-03-04', '2인 주행','하얀풍차제과점 전방에서 2인 주행', 'pic8.jpg', 'hong123');
-
-INSERT INTO Report (region, date, title, content, picture, user_id) VALUES
+('화성', '2025-03-04', '2인 주행','하얀풍차제과점 전방에서 2인 주행', 'pic8.jpg', 'hong123'),
 ('화성', '2025-03-05', '헬멧 미착용','동탄 롯데백화점 전방에서 헬멧 미착용', 'pic9.jpg', 'hong123');
 
 DESC Report;

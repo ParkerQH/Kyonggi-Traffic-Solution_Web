@@ -25,4 +25,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelector('.messages-close').addEventListener('click', function() {
 		document.querySelector('.messages-section').classList.remove('show');
 	});
+
+	var sidebarLinks = document.querySelectorAll('.app-sidebar-link');
+	sidebarLinks.forEach(function(link) {
+		link.addEventListener('click', function() {
+			// 모든 링크에서 active 클래스 제거
+			sidebarLinks.forEach(function(l) {
+				l.classList.remove('active');
+			});
+			// 클릭한 링크에 active 클래스 추가
+			link.classList.add('active');
+		});
+	});
+	
 });            

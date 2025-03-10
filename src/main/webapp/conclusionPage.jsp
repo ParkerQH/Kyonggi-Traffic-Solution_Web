@@ -12,15 +12,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<link rel="stylesheet" href="resource/css/main.css">
+<link rel="stylesheet" href="resource/css/conclusion.css">
 </head>
 <body>
 	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
 		<div class="app-header">
 			<div class="app-header-left">
-				<span class="app-icon"></span>
-				<a href="mainPage.jsp" style="text-decoration: none;"><p class="app-name">TRAFFIC SOLUTION</p></a>
+				<span class="app-icon"></span> <a href="mainPage.jsp"
+					style="text-decoration: none;"><p class="app-name">TRAFFIC
+						SOLUTION</p></a>
 				<div class="search-wrapper">
 					<input class="search-input" type="text" placeholder="Search">
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -105,7 +106,7 @@
 			</div>
 			<div class="projects-section">
 				<div class="projects-section-header">
-					<a href="mainPage.jsp" style="text-decoration: none;"><p>HOME</p></a>
+					<p>CONCLUSION</p>
 					<%
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
@@ -188,135 +189,46 @@
 						</button>
 					</div>
 				</div>
+
 				<div class="project-boxes jsGridView">
-					<%
-					int n = 0;
-					String backgroud;
-					String bar;
-					try {
-						sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
-						pstmt = conn.prepareStatement(sql);
-						rs = pstmt.executeQuery();
-
-						while (rs.next()) {
-							int reportId = rs.getInt("report.report_id");
-							String region = rs.getString("report.region");
-							String date = rs.getString("report.date");
-							String title = rs.getString("report.title");
-							String content = rs.getString("report.content");
-							String result = rs.getString("conclusion.result");
-							float accuracy = rs.getFloat("conclusion.accuracy");
-
-							if (n % 6 == 0) {
-						backgroud = "#fee4cb";
-						bar = "#ff942e";
-						n++;
-							} else if (n % 6 == 1) {
-						backgroud = "#e9e7fd";
-						bar = "#4f3ff0";
-						n++;
-							} else if (n % 6 == 2) {
-						backgroud = "#dbf6fd";
-						bar = "#096c86";
-						n++;
-							} else if (n % 6 == 3) {
-						backgroud = "#ffd3e2";
-						bar = "#df3670";
-						n++;
-							} else if (n % 6 == 4) {
-						backgroud = "#c8f7dc";
-						bar = "#34c471";
-						n++;
-							} else {
-						backgroud = "#d5deff";
-						bar = "#4067f9";
-						n = 0;
-							}
-					%>
-					<div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp';" style="cursor: pointer;">
-						<div class="project-box" style="background-color: <%=backgroud%>;">
+					<div class="project-box-wrapper">
+						<div class="project-box" style="background-color: #fee4cb;">
 							<div class="project-box-header">
-								<%
-								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
-								String exDate = reportDate.format(formatter);
-								%>
-								<span><%=exDate%></span>
+								<span>December 10, 2020</span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
-										<%
-										if (result.equals("승인")) {
-										%>
-
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
 											stroke-width="2" stroke-linecap="round"
 											stroke-linejoin="round" class="feather feather-check-circle">
 											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
 											<polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-										<%
-										} else if (result.equals("반려")) {
-										%>
-
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-x-circle">
-											<circle cx="12" cy="12" r="10"></circle>
-											<line x1="15" y1="9" x2="9" y2="15"></line>
-											<line x1="9" y1="9" x2="15" y2="15"></line></svg>
-										<%
-										} else if (result.equals("미결")) {
-										%>
-
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-help-circle">
-											<circle cx="12" cy="12" r="10"></circle>
-											<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-											<line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-										<%
-										} else if (result.equals("미확인")) {
-										%>
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-circle">
-											<circle cx="12" cy="12" r="10"></circle></svg>
-										<%
-										}
-										%>
 									</button>
 								</div>
 							</div>
 							<div class="project-box-content-header">
-								<p class="box-content-header"><%=title%></p>
-								<p class="box-content-subheader"><%=content%></p>
+								<div class="box-content-left">
+									<img src="resource/images/analysis1.jpg" alt="Project Icon"
+										class="project-icon">
+								</div>
+								<div class="box-content-text">
+									<p class="box-content-header">Web Designing</p>
+									<p class="box-content-subheader">Prototyping</p>
+								</div>
 							</div>
 							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Accuracy</p>
+								<p class="box-progress-header">Progress</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
-										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
+										style="width: 60%; background-color: #ff942e"></span>
 								</div>
-								<p class="box-progress-percentage"><%=(int) (accuracy * 100)%>%
-								</p>
+								<p class="box-progress-percentage">60%</p>
 							</div>
-
 							<div class="project-box-footer">
-								<%
-								Period period = Period.between(reportDate, today);
-								int daysBetween = period.getDays();
-								%>
-								<div class="days-left" style="color: <%=bar%>;"><%=daysBetween%>
-									일전
-								</div>
+								<div class="days-left" style="color: #ff942e;">2 일전</div>
 							</div>
 						</div>
 					</div>
-					<%
-					}
-					%>
 				</div>
 			</div>
 			<div class="messages-section">
@@ -334,17 +246,18 @@
 				</div>
 				<div class="messages">
 					<%
-					sql = "SELECT * FROM notice ORDER BY notice_id DESC;";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
+					try {
+						sql = "SELECT * FROM notice ORDER BY notice_id DESC;";
+						pstmt = conn.prepareStatement(sql);
+						rs = pstmt.executeQuery();
 
-					while (rs.next()) {
-						String title = rs.getString("title");
-						String content = rs.getString("content");
-						String date = rs.getString("date");
+						while (rs.next()) {
+							String title = rs.getString("title");
+							String content = rs.getString("content");
+							String date = rs.getString("date");
 
-						LocalDate noticeDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-						String noDate = noticeDate.format(format);
+							LocalDate noticeDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+							String noDate = noticeDate.format(format);
 					%>
 					<div class="message-box">
 						<div class="message-content">
@@ -382,6 +295,5 @@
 	</div>
 
 	<script src="resource/js/main.js"></script>
-
 </body>
 </html>
