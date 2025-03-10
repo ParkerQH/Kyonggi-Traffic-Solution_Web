@@ -110,6 +110,7 @@
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
+					DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
 					String todayDate = today.format(formatter);
 					PreparedStatement pstmt = null;
 					ResultSet rs, rt = null;
@@ -122,8 +123,9 @@
 					<div class="projects-status">
 						<div class="item-status">
 							<%
-							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result IS NULL;";
+							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?;";
 							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
 
 							if (rs.next()) {
@@ -135,8 +137,9 @@
 						</div>
 						<div class="item-status">
 							<%
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result IS NOT NULL;";
+							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?;";
 							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
 
 							if (rs.next()) {
@@ -282,7 +285,7 @@
 											<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
 											<line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
 										<%
-										} else if (result.isEmpty()) {
+										} else if (result.equals("미확인")) {
 										%>
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -319,7 +322,7 @@
 							%>
 							<div class="project-box-footer">
 								<%
-								Period period = Period.between(reportDate, today); //<변경> 예시 데이터
+								Period period = Period.between(reportDate, today);
 								int daysBetween = period.getDays();
 								%>
 								<div class="days-left" style="color: <%=bar%>;"><%=daysBetween%>
@@ -329,14 +332,6 @@
 						</div>
 					</div>
 					<%
-					}
-					} catch (SQLException e) {
-					e.printStackTrace();
-					} finally {
-					if (rs != null)
-					rs.close();
-					if (pstmt != null)
-					pstmt.close();
 					}
 					%>
 				</div>
@@ -355,10 +350,23 @@
 					<p>공지사항</p>
 				</div>
 				<div class="messages">
+					<%
+				sql = "SELECT * FROM notice ORDER BY notice_id DESC;";
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()){
+					String title = rs.getString("title");
+					String content = rs.getString("content");
+					String date = rs.getString("date");
+				
+					LocalDate noticeDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+					String noDate = noticeDate.format(format);
+				%>
 					<div class="message-box">
 						<div class="message-content">
 							<div class="message-header">
-								<div class="title">수원시 전동킥보드 안전규제 관련 업데이트</div>
+								<div class="title"><%=title %></div>
 								<div class="star-checkbox">
 									<input type="checkbox" id="star-1"> <label for="star-1">
 										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -370,11 +378,21 @@
 									</label>
 								</div>
 							</div>
-							<p class="message-line">최근 증가하는 전동킥보드 사고를 예방하기 위해...</p>
-							<p class="message-line time">Mar, 01</p>
+							<p class="message-line"><%=content %></p>
+							<p class="message-line time"><%=noDate %></p>
 						</div>
 					</div>
-
+					<%
+				}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						if (rs != null)
+						rs.close();
+						if (pstmt != null)
+						pstmt.close();
+					}
+					%>
 				</div>
 			</div>
 		</div>

@@ -24,6 +24,8 @@ INSERT INTO Conclusion (result, accuracy, fine, date, analytical_picture, manage
 ('승인', 0.88, 30000, '2025-03-04', 'analysis7.jpg','admin3', 7),
 ('반려', 0.52, 0, '2025-03-04', 'analysis8.jpg','admin3', 8);
 
+INSERT INTO Conclusion (result, accuracy, analytical_picture, report_ID) VALUES
+('미확인',0.86, 'analysis1.jpg', 9);
 
 DESC Conclusion;
 SELECT * FROM Conclusion;
