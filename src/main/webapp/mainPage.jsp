@@ -124,7 +124,8 @@
 					<div class="projects-status">
 						<div class="item-status">
 							<%
-							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?;";
+							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?"
+									+ "AND report.date = '" + today + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -138,7 +139,8 @@
 						</div>
 						<div class="item-status">
 							<%
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?;";
+							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?"
+									+ "AND report.date = '" + today + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -152,7 +154,7 @@
 						</div>
 						<div class="item-status">
 							<%
-							sql = "SELECT COUNT(*) FROM report";
+							sql = "SELECT COUNT(*) FROM report WHERE report.date = '" + today + "';";
 							pstmt = conn.prepareStatement(sql);
 							rs = pstmt.executeQuery();
 
@@ -202,10 +204,10 @@
 							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("confirmed".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인'  "
-									+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("rejected".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '반려'  "
-									+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("folder".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
 						} else {

@@ -37,19 +37,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			link.classList.add('active');
 		});
 	});
-	
+
 	document.querySelectorAll(".app-sidebar-link").forEach((link) => {
-	        link.addEventListener("click", function (event) {
-	            event.preventDefault(); // 기본 동작 막기
+		link.addEventListener("click", function(event) {
+			event.preventDefault(); // 기본 동작 막기
 
-	            let filter = this.getAttribute("data-filter"); // 클릭한 버튼의 data-filter 값 가져오기
-	            console.log("선택한 필터:", filter); // 콘솔 확인
+			let filter = this.getAttribute("data-filter"); // 클릭한 버튼의 data-filter 값 가져오기
+			console.log("선택한 필터:", filter); // 콘솔 확인
 
-	            // 현재 URL을 변경하여 필터 값 전달
-	            let currentUrl = new URL(window.location.href);
-	            currentUrl.searchParams.set("filter", filter);
-	            window.location.href = currentUrl.toString();
-	        });
-	    });
+			// 현재 URL을 변경하여 필터 값 전달
+			let currentUrl = new URL(window.location.href);
+			currentUrl.searchParams.set("filter", filter);
+			window.location.href = currentUrl.toString();
+		});
+	});
 
 });            
