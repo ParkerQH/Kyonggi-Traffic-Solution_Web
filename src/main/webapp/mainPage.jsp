@@ -19,8 +19,9 @@
 	<div class="app-container">
 		<div class="app-header">
 			<div class="app-header-left">
-				<span class="app-icon"></span>
-				<a href="mainPage.jsp" style="text-decoration: none;"><p class="app-name">TRAFFIC SOLUTION</p></a>
+				<span class="app-icon"></span> <a href="mainPage.jsp"
+					style="text-decoration: none;"><p class="app-name">TRAFFIC
+						SOLUTION</p></a>
 				<div class="search-wrapper">
 					<input class="search-input" type="text" placeholder="Search">
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -65,20 +66,20 @@
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 미결, 전체--%>
-				<a href="#" class="app-sidebar-link active"> <svg
+				<a href="#" class="app-sidebar-link active" data-filter="all"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-home"> <path
 							d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <polyline
 							points="9 22 9 12 15 12 15 22" /></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="#" class="app-sidebar-link" data-filter="unconfirmed">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-square">
 						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
+				</a> <a href="#" class="app-sidebar-link" data-filter="confirmed"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -86,7 +87,7 @@
 						<polyline points="9 11 12 14 22 4"></polyline>
 						<path
 							d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
+				</a> <a href="#" class="app-sidebar-link" data-filter="rejected"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -94,7 +95,7 @@
 						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
 						<line x1="9" y1="9" x2="15" y2="15"></line>
 						<line x1="15" y1="9" x2="9" y2="15"></line></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
+				</a> <a href="#" class="app-sidebar-link" data-filter="folder"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -193,8 +194,25 @@
 					int n = 0;
 					String backgroud;
 					String bar;
+					String filter = request.getParameter("filter");
+
 					try {
-						sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
+						if ("unconfirmed".equals(filter)) {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '미확인' "
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+						} else if ("confirmed".equals(filter)) {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인'  "
+									+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+						} else if ("rejected".equals(filter)) {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '반려'  "
+									+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+						} else if ("folder".equals(filter)) {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
+						} else {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id "
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+						}
+
 						pstmt = conn.prepareStatement(sql);
 						rs = pstmt.executeQuery();
 
@@ -233,7 +251,9 @@
 						n = 0;
 							}
 					%>
-					<div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp';" style="cursor: pointer;">
+					<div class="project-box-wrapper"
+						onclick="window.location='conclusionPage.jsp';"
+						style="cursor: pointer;">
 						<div class="project-box" style="background-color: <%=backgroud%>;">
 							<div class="project-box-header">
 								<%
