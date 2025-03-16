@@ -171,8 +171,8 @@
 									<section class="about">
 										<h2><%=date %>/<%=region %></h2>
 										
-										<p>위반 사항 :<%=title %></p>
-										<p>신고 내용 :<%=content%></p>
+										<p><strong>위반 사항 :&nbsp;</strong> <%=title %></p>
+										<p><strong>신고 내용 :&nbsp;</strong> <%=content%></p>
 										<br>
 									</section>
 									<section class="conclusion">
@@ -181,7 +181,7 @@
 											<div class="form-group">
 												<label for="result">결과 :</label> <select id="result"
 													name="result" onchange="updateRegions()">
-													<option value="" selected>Select result</option>
+													<option value="" selected>미확인</option>
 													<option value="승인">승인</option>
 													<option value="반려">반려</option>
 												</select>
@@ -191,10 +191,7 @@
 												<textarea name="content" id="content" rows="10"></textarea>
 											</div>
 											<div class="form-group">
-												<c:set var="submitText">
-												제출
-											</c:set>
-												<input type="submit" value="${submitText}">
+												<input type="submit" value="제출">
 											</div>
 										</form>
 									</section>
