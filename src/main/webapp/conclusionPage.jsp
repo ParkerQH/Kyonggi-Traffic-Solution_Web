@@ -108,6 +108,11 @@
 				<div class="projects-section-header">
 					<p>CONCLUSION</p>
 					<%
+					// report 데이터 및 색상 데이터 가져오기
+					String reportId = request.getParameter("id");
+					String background = request.getParameter("backcolar");
+					String bar = request.getParameter("barcolar");
+
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
@@ -119,82 +124,38 @@
 					%>
 					<p class="time"><%=todayDate%></p>
 				</div>
-				<div class="projects-section-line">
-					<%--신고 접수 건수를 보여주는 부분--%>
-					<div class="projects-status">
-						<div class="item-status">
-							<%
-							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?;";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.setString(1, "미확인");
-							rs = pstmt.executeQuery();
+				<%
+				try {
+					String sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE report.report_id = ?;";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, reportId);
+					rs = pstmt.executeQuery();
 
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type">In Progress</span>
-						</div>
-						<div class="item-status">
-							<%
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?;";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.setString(1, "미확인");
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type">Completed</span>
-						</div>
-						<div class="item-status">
-							<%
-							sql = "SELECT COUNT(*) FROM report";
-							pstmt = conn.prepareStatement(sql);
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type">Total</span>
-						</div>
-					</div>
-					<div class="view-actions">
-						<button class="view-btn list-view" title="List View">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-								viewBox="0 0 24 24" fill="none" stroke="currentColor"
-								stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-								class="feather feather-list">
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" /></svg>
-						</button>
-						<button class="view-btn grid-view active" title="Grid View">
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-								viewBox="0 0 24 24" fill="none" stroke="currentColor"
-								stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-								class="feather feather-grid">
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" /></svg>
-						</button>
-					</div>
-				</div>
+					if (rs.next()) {
+						String date = rs.getString("report.date");
+						String region = rs.getString("report.region");
+						String title = rs.getString("report.title");
+						String content = rs.getString("report.content");
+						String conclusionPicture = rs.getString("conclusion.analytical_picture");
+						String result = rs.getString("conclusion.result");
+						float accuracy = rs.getFloat("conclusion.accuracy");	
+						String reseon;
+						if(rs.getString("conclusion.reseon")==null)
+							reseon = "";
+						else
+							reseon = rs.getString("conclusion.resion");
+				%>
 
 				<div class="project-boxes jsGridView">
 					<div class="project-box-wrapper">
-						<div class="project-box" style="background-color: #fee4cb;">
+						<div class="project-box"
+							style="background-color: <%=background%>;">
 							<div class="project-box-header">
-								<span>December 10, 2020</span>
+								<%
+								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
+								String exDate = reportDate.format(formatter);
+								%>
+								<span><%=exDate%></span>
 								<div class="more-wrapper">
 									<button class="project-btn-more">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -208,28 +169,60 @@
 							</div>
 							<div class="project-box-content-header">
 								<div class="box-content-left">
-									<img src="resource/images/analysis1.jpg" alt="Project Icon"
-										class="project-icon">
+									<img src="resource/images/<%=conclusionPicture%>"
+										alt="Project Icon" class="project-icon">
 								</div>
 								<div class="box-content-text">
-									<p class="box-content-header">Web Designing</p>
-									<p class="box-content-subheader">Prototyping</p>
+									<section class="about">
+										<h2><%=date %>/<%=region %></h2>
+										
+										<p><strong>위반 사항 :&nbsp;</strong> <%=title %></p>
+										<p><strong>신고 내용 :&nbsp;</strong> <%=content%></p>
+										<br>
+									</section>
+									<section class="conclusion">
+										<form action="addTripAction.jsp" method="post"
+											enctype="multipart/form-data">
+											<div class="form-group">
+												<label for="result">결과 :</label> <select id="result"
+													name="result" onchange="updateRegions()">
+													<option value="" selected>미확인</option>
+													<option value="승인">승인</option>
+													<option value="반려">반려</option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label for="fine">벌금 :</label>
+												<input type="text" name="fine" id="fine" value=<%= rs.getInt("fine") %>>
+											</div>
+											<div class="form-group">
+												<label for="reseon">사유 :</label>
+												<textarea name="reseon" id="reseon" rows="5" ><%= reseon %></textarea>
+											</div>
+											<div class="form-group">
+												<input type="submit" value="제출">
+											</div>
+										</form>
+									</section>
 								</div>
 							</div>
 							<div class="box-progress-wrapper">
 								<p class="box-progress-header">Progress</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
-										style="width: 60%; background-color: #ff942e"></span>
+										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
 								</div>
-								<p class="box-progress-percentage">60%</p>
+								<p class="box-progress-percentage"><%=(int) (accuracy * 100)%>%</p>
 							</div>
 							<div class="project-box-footer">
-								<div class="days-left" style="color: #ff942e;">2 일전</div>
+								<div class="days-left" style="color: <%=bar%>;">2 일전</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<%
+				}
+				%>
 			</div>
 			<div class="messages-section">
 				<button class="messages-close">
@@ -246,18 +239,17 @@
 				</div>
 				<div class="messages">
 					<%
-					try {
-						sql = "SELECT * FROM notice ORDER BY notice_id DESC;";
-						pstmt = conn.prepareStatement(sql);
-						rs = pstmt.executeQuery();
+					sql = "SELECT * FROM notice ORDER BY notice_id DESC;";
+					pstmt = conn.prepareStatement(sql);
+					rs = pstmt.executeQuery();
 
-						while (rs.next()) {
-							String title = rs.getString("title");
-							String content = rs.getString("content");
-							String date = rs.getString("date");
+					while (rs.next()) {
+						String title = rs.getString("title");
+						String content = rs.getString("content");
+						String date = rs.getString("date");
 
-							LocalDate noticeDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-							String noDate = noticeDate.format(format);
+						LocalDate noticeDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+						String noDate = noticeDate.format(format);
 					%>
 					<div class="message-box">
 						<div class="message-content">

@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="java.time.Period"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -194,7 +195,7 @@
 				<div class="project-boxes jsGridView">
 					<%
 					int n = 0;
-					String backgroud;
+					String background;
 					String bar;
 					String filter = request.getParameter("filter");
 
@@ -228,35 +229,40 @@
 							float accuracy = rs.getFloat("conclusion.accuracy");
 
 							if (n % 6 == 0) {
-						backgroud = "#fee4cb";
+						background = "#fee4cb";
 						bar = "#ff942e";
 						n++;
 							} else if (n % 6 == 1) {
-						backgroud = "#e9e7fd";
+						background = "#e9e7fd";
 						bar = "#4f3ff0";
 						n++;
 							} else if (n % 6 == 2) {
-						backgroud = "#dbf6fd";
+						background = "#dbf6fd";
 						bar = "#096c86";
 						n++;
 							} else if (n % 6 == 3) {
-						backgroud = "#ffd3e2";
+						background = "#ffd3e2";
 						bar = "#df3670";
 						n++;
 							} else if (n % 6 == 4) {
-						backgroud = "#c8f7dc";
+						background = "#c8f7dc";
 						bar = "#34c471";
 						n++;
 							} else {
-						backgroud = "#d5deff";
+						background = "#d5deff";
 						bar = "#4067f9";
 						n = 0;
 							}
 					%>
+					<%
+					String backColor = (background != null) ? URLEncoder.encode(background, "UTF-8") : "";
+					String barColor = (bar != null) ? URLEncoder.encode(bar, "UTF-8") : "";
+					%>
 					<div class="project-box-wrapper"
-						onclick="window.location='conclusionPage.jsp';"
+						onclick="window.location='conclusionPage.jsp?id=<%=rs.getString("report_id")%>&backcolar=<%=backColor%>&barcolar=<%=barColor%>';"
 						style="cursor: pointer;">
-						<div class="project-box" style="background-color: <%=backgroud%>;">
+						<div class="project-box"
+							style="background-color: <%=background%>;">
 							<div class="project-box-header">
 								<%
 								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
