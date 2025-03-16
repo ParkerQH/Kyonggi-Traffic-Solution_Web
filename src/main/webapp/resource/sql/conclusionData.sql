@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS Conclusion (
 	conclusion_id INT AUTO_INCREMENT NOT NULL,
 	result VARCHAR(50),
 	accuracy FLOAT,
+	reseon VARCHAR(50),
 	fine INT,
 	date VARCHAR(50),
 	analytical_picture VARCHAR(255),

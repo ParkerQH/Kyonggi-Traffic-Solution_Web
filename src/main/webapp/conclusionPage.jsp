@@ -138,7 +138,12 @@
 						String content = rs.getString("report.content");
 						String conclusionPicture = rs.getString("conclusion.analytical_picture");
 						String result = rs.getString("conclusion.result");
-						float accuracy = rs.getFloat("conclusion.accuracy");
+						float accuracy = rs.getFloat("conclusion.accuracy");	
+						String reseon;
+						if(rs.getString("conclusion.reseon")==null)
+							reseon = "";
+						else
+							reseon = rs.getString("conclusion.resion");
 				%>
 
 				<div class="project-boxes jsGridView">
@@ -187,8 +192,12 @@
 												</select>
 											</div>
 											<div class="form-group">
-												<label for="content">사유 :</label>
-												<textarea name="content" id="content" rows="10"></textarea>
+												<label for="fine">벌금 :</label>
+												<input type="text" name="fine" id="fine" value=<%= rs.getInt("fine") %>>
+											</div>
+											<div class="form-group">
+												<label for="reseon">사유 :</label>
+												<textarea name="reseon" id="reseon" rows="5" ><%= reseon %></textarea>
 											</div>
 											<div class="form-group">
 												<input type="submit" value="제출">
