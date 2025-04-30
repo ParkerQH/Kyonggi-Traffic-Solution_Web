@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap");
+@import
+	url("https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap")
+	;
 
 * {
 	box-sizing: border-box;
@@ -274,45 +276,112 @@ button, a {
 	color: var(--link-color-active);
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 95%;
-    margin-bottom: 15px;
+/* 전체 배경 컬러 (선택사항) */
+.conclusion {
+	background: #fff;
+	border-radius: 16px;
+	padding: 30px 32px;
+	max-width: 440px;
+	margin: 40px auto; /* 중앙 정렬 */
+	box-shadow: 0 2px 12px rgba(60, 75, 220, 0.05);
 }
 
+/* 공통 form-group */
+.form-group {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 18px;
+}
+
+/* 라벨 */
 .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+	margin-bottom: 7px;
+	font-weight: 600;
+	font-size: 1.05em;
+	color: #2c346d;
+	letter-spacing: 0.5px;
+}
+
+/* 셀렉트박스(result) */
+.conclusion select {
+	width: 30%;
+	min-width: 100px;
+	max-width: 220px;
+	padding: 10px 12px;
+	border: 1.5px solid #000000;
+	border-radius: 7px;
+	background: #fff;
+	font-size: 1em;
+	color: #222;
+	transition: border-color 0.2s, box-shadow 0.2s;
+	outline: none;
+}
+
+.conclusion select:focus {
+	border: 2px solid #000000; 
+	background: #e7edfd;
+}
+
+/* 벌금 인풋 */
+.form-group input[type="text"]#fine {
+	width: 30%;
+	min-width: 100px;
+	max-width: 220px;
+	padding: 10px 12px;
+	border: 1.5px solid #000000;
+	border-radius: 7px;
+	background: #ffffff;
+	font-size: 1em;
+	color: #24292f;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]#fine:focus {
+	border-color: #4c67bb;
+	background: #e7edfd;
+	box-shadow: 0 0 4px #a0b8fa77;
+}
+
+/* 사유 textarea */
+.conclusion textarea {
+	width: 85%;
+	min-width: 180px;
+	max-width: 300px;
+	min-height: 90px;
+	resize: vertical;
+	padding: 10px 12px;
+	border: 1.5px solid #000000;
+	border-radius: 7px;
+	font-size: 1em;
+	background: #ffffff;
+	color: #24292f;
+	transition: border-color 0.2s, box-shadow 0.2s;
+	box-sizing: border-box;
+}
+
+.conclusion textarea:focus {
+	border-color: #7e95ff;
+	background: #e8edff;
+	box-shadow: 0 0 4px #a0b8fa77;
 }
 
 .form-group input[type="submit"] {
-    background-color: #4e4e4e;
-    color: #ffffff; /* 흰색 글씨 */
-    font-size: 15px; /* 크기 약간 증가 */
-    font-weight: bold;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px; /* 모서리 둥글게 */
-    cursor: pointer;
-    margin: 0 ;
-    width: fit-content; /* 버튼의 크기를 텍스트에 맞춤 */
-    transition: background-color 0.3s ease;
+	background-color: #4e4e4e;
+	color: #ffffff; /* 흰색 글씨 */
+	font-size: 15px; /* 크기 약간 증가 */
+	font-weight: bold;
+	padding: 8px 15px;
+	border: none;
+	border-radius: 8px; /* 모서리 둥글게 */
+	cursor: pointer;
+	margin: 0;
+	width: fit-content; /* 버튼의 크기를 텍스트에 맞춤 */
+	transition: background-color 0.3s ease;
 }
 
 .form-group input[type="submit"]:hover {
-    background-color: #c0c0c0; /* 마우스 올렸을 때 더 밝은 갈색 */
-}
-
-.conclusion select,
-.conclusion textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    box-sizing: border-box; /* 패딩과 테두리를 포함한 너비 계산 */
+	background-color: #c0c0c0; /* 마우스 올렸을 때 더 밝은 회색 */
 }
 
 .projects-section {
@@ -651,27 +720,33 @@ button, a {
 
 .box-content-left {
 	display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 45%;
+	justify-content: center;
+	align-items: center;
+	width: 50%;
 }
 
 .box-content-left img {
-    width: auto;
-    height: 500px;
-    max-width: 90%;
+	display: block;
+	max-width: 550px; /* 가로 최대 550px까지 */
+	max-height: 600px; /* 세로 최대 650px까지 */
+	width: 85%;
+	height: 85%;
+	object-fit: contain; /* 가로/세로 비율 유지하며 안에 맞춤 */
+	border-radius: 12px;
+	box-shadow: 0 2px 12px rgba(60, 75, 220, 0.06);
+	background: #f3f6fd;
 }
 
 .box-content-text {
-    width: 55%;
-    padding-left: 10px;
+	width: 55%;
+	padding-left: 10px;
 }
 
 .project-icon {
-    width: 50%;
-    height: 50%;
-    object-fit: cover;
-    border-radius: 5%;
+	width: 50%;
+	height: 50%;
+	object-fit: cover;
+	border-radius: 5%;
 }
 
 .project-box-wrapper {
