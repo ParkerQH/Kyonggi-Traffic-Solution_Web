@@ -17,58 +17,22 @@
 <body>
 	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
-		<%@include file="header.jsp" %> <%--상단 헤더 부분--%>
+		<%@include file="header.jsp"%>
+		<%--상단 헤더 부분--%>
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 미결, 전체--%>
-				<a href="#" class="app-sidebar-link active"> <svg
+				<a href="mainPage.jsp" class="app-sidebar-link active"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-home"> <path
 							d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <polyline
 							points="9 22 9 12 15 12 15 22" /></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-square">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-check-square">
-						<polyline points="9 11 12 14 22 4"></polyline>
-						<path
-							d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-x-square">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-						<line x1="9" y1="9" x2="15" y2="15"></line>
-						<line x1="15" y1="9" x2="9" y2="15"></line></svg>
-				</a> <a href="#" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-folder">
-						<path
-							d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-				</a> <a href="#" class="app-sidebar-link" data-filter="list"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-archive">
-						<polyline points="21 8 21 21 3 21 3 8"></polyline>
-						<rect x="1" y="3" width="22" height="5"></rect>
-						<line x1="10" y1="12" x2="14" y2="12"></line></svg>
 				</a>
 			</div>
 			<div class="projects-section">
-			
+
 				<div class="projects-section-header">
 					<p>CONCLUSION</p>
 					<%
@@ -102,12 +66,12 @@
 						String content = rs.getString("report.content");
 						String conclusionPicture = rs.getString("conclusion.analytical_picture");
 						String result = rs.getString("conclusion.result");
-						float accuracy = rs.getFloat("conclusion.accuracy");	
+						float accuracy = rs.getFloat("conclusion.accuracy");
 						String reseon;
-						if(rs.getString("conclusion.reseon")==null)
-							reseon = "";
+						if (rs.getString("conclusion.reseon") == null)
+					reseon = "";
 						else
-							reseon = rs.getString("conclusion.resion");
+					reseon = rs.getString("conclusion.resion");
 				%>
 
 				<div class="project-boxes jsGridView">
@@ -138,10 +102,14 @@
 								</div>
 								<div class="box-content-text">
 									<section class="about">
-										<h2><%=date %>/<%=region %></h2>
-										
-										<p><strong>위반 사항 :&nbsp;</strong> <%=title %></p>
-										<p><strong>신고 내용 :&nbsp;</strong> <%=content%></p>
+										<h2><%=date%>/<%=region%></h2>
+
+										<p>
+											<strong>위반 사항 :&nbsp;</strong>
+											<%=title%></p>
+										<p>
+											<strong>신고 내용 :&nbsp;</strong>
+											<%=content%></p>
 										<br>
 									</section>
 									<section class="conclusion">
@@ -150,18 +118,21 @@
 											<div class="form-group">
 												<label for="result">결과 :</label> <select id="result"
 													name="result" onchange="updateRegions()">
-													<option value="" selected>미확인</option>
-													<option value="승인">승인</option>
-													<option value="반려">반려</option>
+													<option value=""
+														<%=(result == null || result.equals("")) ? "selected" : ""%>>미확인</option>
+													<option value="승인"
+														<%="승인".equals(result) ? "selected" : ""%>>승인</option>
+													<option value="반려"
+														<%="반려".equals(result) ? "selected" : ""%>>반려</option>
 												</select>
 											</div>
 											<div class="form-group">
-												<label for="fine">벌금 :</label>
-												<input type="text" name="fine" id="fine" value=<%= rs.getInt("fine") %>>
+												<label for="fine">벌금 :</label> <input type="text"
+													name="fine" id="fine" value=<%=rs.getInt("fine")%>>
 											</div>
 											<div class="form-group">
 												<label for="reseon">사유 :</label>
-												<textarea name="reseon" id="reseon" rows="5" ><%= reseon %></textarea>
+												<textarea name="reseon" id="reseon" rows="5"><%=reseon%></textarea>
 											</div>
 											<div class="form-group">
 												<input type="submit" value="제출">
@@ -176,7 +147,8 @@
 									<span class="box-progress"
 										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
 								</div>
-								<p class="box-progress-percentage"><%=(int) (accuracy * 100)%>%</p>
+								<p class="box-progress-percentage"><%=(int) (accuracy * 100)%>%
+								</p>
 							</div>
 							<div class="project-box-footer">
 								<div class="days-left" style="color: <%=bar%>;">2 일전</div>
@@ -188,16 +160,17 @@
 				}
 				%>
 			</div>
-			<%@include file="notice.jsp"%>	<%--우측 공지사항--%>
+			<%@include file="notice.jsp"%>
+			<%--우측 공지사항--%>
 			<%
 			} catch (SQLException e) {
-					e.printStackTrace();
-					} finally {
-					if (rs != null)
-					rs.close();
-					if (pstmt != null)
-					pstmt.close();
-					}
+			e.printStackTrace();
+			} finally {
+			if (rs != null)
+				rs.close();
+			if (pstmt != null)
+				pstmt.close();
+			}
 			%>
 		</div>
 	</div>
