@@ -4,8 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="resource/css/main.css">
+<title>상단 헤더 페이지</title>
+<!-- <link rel="stylesheet" href="resource/css/main.css"> -->
 </head>
 <body>
 	<div class="app-header">

@@ -19,7 +19,7 @@
 <body>
 	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
-		<%@include file="header.jsp" %>
+		<%@include file="header.jsp" %> <%--상단 헤더 부분--%>
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 미결, 전체--%>
@@ -311,7 +311,7 @@
 					%>
 				</div>
 			</div>
-			<%@include file="notice.jsp"%>
+			<%@include file="notice.jsp"%>	<%--우측 공지사항--%>
 			<%
 			} catch (SQLException e) {
 					e.printStackTrace();

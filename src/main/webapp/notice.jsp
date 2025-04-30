@@ -7,7 +7,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="resource/css/main.css">
+<title>우측 공지 페이지</title>
+<!--link rel="stylesheet" href="resource/css/main.css"  -->
 </head>
 <body>
 	<%--@include file="dbconn.jsp"--%>
