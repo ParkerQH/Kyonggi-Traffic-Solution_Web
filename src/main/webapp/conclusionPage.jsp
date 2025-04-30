@@ -101,9 +101,8 @@
 										alt="Project Icon" class="project-icon">
 								</div>
 								<div class="box-content-text">
-									<section class="about">
-										<h2><%=date%>/<%=region%></h2>
-
+									<section class="conclusion">
+									<h2><%=date%>/<%=region%></h2>
 										<p>
 											<strong>위반 사항 :&nbsp;</strong>
 											<%=title%></p>
@@ -111,8 +110,6 @@
 											<strong>신고 내용 :&nbsp;</strong>
 											<%=content%></p>
 										<br>
-									</section>
-									<section class="conclusion">
 										<form action="addTripAction.jsp" method="post"
 											enctype="multipart/form-data">
 											<div class="form-group">
