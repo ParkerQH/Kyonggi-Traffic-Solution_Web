@@ -32,15 +32,28 @@ img {
 	height: auto;
 }
 
-/*=============== LOGIN ===============*/
-.login {
+.notification {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #f0f0f0; /* 밝은 회색 */
+	color: #333; /* 텍스트 색상 */
+	padding: 15px;
+	border-radius: 5px;
+	display: none;
+	z-index: 1000; /* 다른 요소 위에 표시 */
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+}
+/*=============== REGISTER ===============*/
+.register {
 	position: relative;
 	height: 100vh;
 	display: grid;
 	align-items: center;
 }
 
-.login__img {
+.register__img {
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -58,34 +71,34 @@ img {
 	backdrop-filter: blur(10px);
 }
 
-.login__title {
+.register__title {
 	text-align: center;
 	font-size: 1.75rem;
 	font-weight: 500;
 	margin-bottom: 2rem;
 }
 
-.login__content, .login__box {
+.register__content, .register__box {
 	display: grid;
 }
 
-.login__content {
+.register__content {
 	row-gap: 1.75rem;
 	margin-bottom: 1.5rem;
 }
 
-.login__box {
+.register__box {
 	grid-template-columns: max-content 1fr;
 	align-items: center;
 	column-gap: 0.75rem;
 	border-bottom: 2px solid hsl(0, 0%, 100%);
 }
 
-.login__icon, .login__eye {
+.register__icon, .register__eye {
 	font-size: 1.25rem;
 }
 
-.login__input {
+.register__input {
 	width: 100%;
 	padding-block: 0.8rem;
 	background: none;
@@ -94,11 +107,11 @@ img {
 	z-index: 1;
 }
 
-.login__box-input {
+.register__box-input {
 	position: relative;
 }
 
-.login__label {
+.register__label {
 	position: absolute;
 	left: 0;
 	top: 13px;
@@ -106,7 +119,7 @@ img {
 	transition: top 0.3s, font-size 0.3s;
 }
 
-.login__eye {
+.register__eye {
 	position: absolute;
 	right: 0;
 	top: 18px;
@@ -114,42 +127,11 @@ img {
 	cursor: pointer;
 }
 
-.login__box:nth-child(2) input {
+.register__box:nth-child(2) input {
 	padding-right: 1.8rem;
 }
 
-.login__check, .login__check-group {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.login__check {
-	margin-bottom: 1.5rem;
-}
-
-.login__check-label, .login__forgot, .login__register {
-	font-size: 0.813rem;
-}
-
-.login__check-group {
-	column-gap: 0.5rem;
-}
-
-.login__check-input {
-	width: 16px;
-	height: 16px;
-}
-
-.login__forgot {
-	color: hsl(0, 0%, 100%);
-}
-
-.login__forgot:hover {
-	text-decoration: underline;
-}
-
-.login__button {
+.register__button {
 	width: 100%;
 	padding: 1rem;
 	border-radius: 0.5rem;
@@ -159,50 +141,36 @@ img {
 	margin-bottom: 2rem;
 }
 
-.login__register {
+.register__login {
 	text-align: center;
-	font-size: 18px;
 }
 
-.login__register a {
+.register__login a {
 	color: hsl(0, 0%, 100%);
 	font-weight: 500;
-	margin-right: 30px;
-	margin-left: 30px;
 }
 
-.login__register a:hover {
+.register__login a:hover {
 	text-decoration: underline;
 }
 
 /* Input focus move up label */
-.login__input:focus+.login__label {
+.register__input:focus+.register__label {
 	top: -12px;
 	font-size: 0.813rem;
 }
 
 /* Input focus sticky top label */
-.login__input:not(:placeholder-shown).login__input:not(:focus)+.login__label
+.register__input:not(:placeholder-shown).register__input:not(:focus)+.register__label
 	{
 	top: -12px;
 	font-size: 0.813rem;
 }
 
-
-/*=============== ERROR MESSAGE ===============*/
-.error-message {
-    color: red !important; /* 글자 색상 */
-    text-align: center;
-    display: none; /* 기본적으로 숨김 */
-    font-size: 1em; /* 글자 크기 조절 */
-    font-weight: bold; /* 글씨를 두껍게 */
-    text-decoration: underline !important; /* 밑줄 추가 */
-}
-
 /*=============== BREAKPOINTS ===============*/
 /* For medium devices */
 @media screen and (min-width: 576px) {
-	.login {
+	.register {
 		justify-content: center;
 	}
 	.container {
@@ -210,7 +178,7 @@ img {
 		padding: 4rem 3rem 3.5rem;
 		border-radius: 1.5rem;
 	}
-	.login__title {
+	.register__title {
 		font-size: 2rem;
 	}
 }
