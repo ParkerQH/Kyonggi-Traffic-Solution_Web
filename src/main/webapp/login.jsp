@@ -1,19 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ page import="java.sql.*"%>
 <%@ include file="dbconn.jsp"%>
-<!-- Include the DB connection file -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link
-	href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="resource/css/login.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="resource/js/login.js"></script>
