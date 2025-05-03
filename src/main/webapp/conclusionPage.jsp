@@ -23,17 +23,15 @@
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 미결, 전체--%>
-				<a href="mainPage.jsp" class="app-sidebar-link active"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						class="feather feather-home"> <path
-							d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <polyline
-							points="9 22 9 12 15 12 15 22" /></svg>
+				<a href="mainPage.jsp" class="app-sidebar-link active"> 
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"> 
+						<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> 
+						<polyline points="9 22 9 12 15 12 15 22" />
+				</svg>
 				</a>
 			</div>
 			<div class="projects-section">
-
 				<div class="projects-section-header">
 					<p>CONCLUSION</p>
 					<%
@@ -70,9 +68,9 @@
 						float accuracy = rs.getFloat("conclusion.accuracy");
 						String reseon;
 						if (rs.getString("conclusion.reseon") == null)
-					reseon = "";
+							reseon = "";
 						else
-					reseon = rs.getString("conclusion.resion");
+							reseon = rs.getString("conclusion.resion");
 				%>
 
 				<div class="project-boxes jsGridView">
@@ -92,14 +90,14 @@
 											stroke-width="2" stroke-linecap="round"
 											stroke-linejoin="round" class="feather feather-check-circle">
 											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-											<polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+											<polyline points="22 4 12 14.01 9 11.01"></polyline>
+										</svg>
 									</button>
 								</div>
 							</div>
 							<div class="project-box-content-header">
 								<div class="box-content-left">
-									<img src="resource/images/<%=conclusionPicture%>"
-										alt="Project Icon" class="project-icon">
+									<img src="resource/images/<%=conclusionPicture%>" alt="Project Icon" class="project-icon">
 								</div>
 								<div class="box-content-text">
 									<section class="conclusion">
@@ -162,17 +160,16 @@
 			<%--우측 공지사항--%>
 			<%
 			} catch (SQLException e) {
-			e.printStackTrace();
+				e.printStackTrace();
 			} finally {
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
 			}
 			%>
 		</div>
 	</div>
-
 	<script src="resource/js/main.js"></script>
 </body>
 </html>
