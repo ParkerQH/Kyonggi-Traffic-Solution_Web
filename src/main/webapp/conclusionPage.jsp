@@ -64,6 +64,7 @@
 						String title = rs.getString("report.title");
 						String content = rs.getString("report.content");
 						String conclusionPicture = rs.getString("conclusion.analytical_picture");
+						String brand = rs.getString("");
 						String result = rs.getString("conclusion.result");
 						float accuracy = rs.getFloat("conclusion.accuracy");
 						String reseon;
@@ -101,7 +102,7 @@
 								</div>
 								<div class="box-content-text">
 									<section class="conclusion">
-									<h2><%=date%>/<%=region%></h2>
+									<h2><%=date%>/<%=region%>/</h2>
 										<p>
 											<strong>위반 사항 :&nbsp;</strong>
 											<%=title%></p>
