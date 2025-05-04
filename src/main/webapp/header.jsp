@@ -5,13 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <title>상단 헤더 페이지</title>
-<!-- <link rel="stylesheet" href="resource/css/main.css"> -->
+<link rel="stylesheet" href="resource/css/header.css">
 </head>
 <body>
 	<div class="app-header">
 		<div class="app-header-left">
-			<span class="app-icon"></span> 
-			<a href="mainPage.jsp" style="text-decoration: none;">
+			<span class="app-icon"></span> <a href="mainPage.jsp"
+				style="text-decoration: none;">
 				<p class="app-name">TRAFFICSOLUTION</p>
 			</a>
 			<%-- 검색 부분 추후 업데이트
@@ -29,6 +29,7 @@
 			--%>
 		</div>
 		<div class="app-header-right">
+			<a href="logout.jsp?" class="logout-link">Logout</a>
 			<button class="mode-switch" title="Switch Theme">
 				<svg class="moon" fill="none" stroke="currentColor"
 					stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -37,13 +38,30 @@
         			<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
         		</svg>
 			</button>
+			<%
+			String managerRegion = (String) session.getAttribute("managerRegion");
+			%>
 			<button class="profile-btn">
-				<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
-					fill="currentColor" class="bi bi-person-circle" viewBox="0 0 19 19">
-                		<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                		<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-              	</svg>
-				<span>ADMIN</span>
+			
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+					viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="feather feather-map-pin">
+					<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+					<circle cx="12" cy="10" r="3"></circle></svg>
+				<span>&nbsp;<%=managerRegion %></span>
+			</button>
+			<%
+			String name = (String) session.getAttribute("loggedInManager");
+			%>
+			<button class="profile-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+					viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="feather feather-user">
+					<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+					<circle cx="12" cy="7" r="4"></circle></svg>
+				<span>&nbsp;<%=name%></span>
 			</button>
 		</div>
 		<button class="messages-btn">
@@ -51,7 +69,8 @@
 				viewBox="0 0 24 24" fill="none" stroke="currentColor"
 				stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 				class="feather feather-message-circle">
-        			<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+        			<path
+					d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
         	</svg>
 		</button>
 	</div>

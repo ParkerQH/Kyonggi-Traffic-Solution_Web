@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="resource/css/login.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="resource/js/login.js"></script>
@@ -60,10 +60,11 @@
 			String id = request.getParameter("id");
 			String password = request.getParameter("password");
 			boolean isValid = false; // 기본값을 false로 설정
-
+			String managerName = null;
+			String managerRegion = null;
 			if (id != null && password != null) {
 				// SQL 쿼리로 로그인 검증
-				String query = "SELECT pw FROM User WHERE user_id = ?";
+				String query = "SELECT pw, name, region FROM Manager WHERE manager_id = ?";
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 
@@ -77,11 +78,14 @@
 						// 비밀번호가 일치하면 로그인 성공
 						if (password.equals(dbPassword)) {
 							isValid = true;
+							managerName = rs.getString("name");
+							managerRegion = rs.getString("region");
 						}
 					}
 
 					if (isValid) {
-						session.setAttribute("loggedInUser", id);
+						session.setAttribute("loggedInManager", managerName);
+						session.setAttribute("managerRegion", managerRegion);
 			%>
 			<script>
 				window.location.href = "mainPage.jsp"; // 로그인 성공 후 리다이렉션

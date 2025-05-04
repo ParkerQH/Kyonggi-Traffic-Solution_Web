@@ -23,7 +23,6 @@
 	--button-bg: #1f1c24;
 	--search-area-bg: #fff;
 	--star: #1ff1c2 e;
-	--message-btn: #fff;
 }
 
 .dark:root {
@@ -44,7 +43,6 @@
 	--more-list-bg: #2f3142;
 	--more-list-bg-hover: rgba(195, 207, 244, 0.1);
 	--more-list-shadow: rgba(195, 207, 244, 0.1);
-	--message-btn: rgba(195, 207, 244, 0.1);
 }
 
 html, body {
@@ -86,56 +84,6 @@ button, a {
 	overflow: hidden;
 	padding: 16px 24px 24px 0;
 }
-
-.app-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	padding: 16px 24px;
-	position: relative;
-}
-
-.app-header-left, .app-header-right {
-	display: flex;
-	align-items: center;
-}
-
-.app-header-left {
-	flex-grow: 1;
-}
-
-.app-header-right button {
-	margin-left: 10px;
-}
-
-.app-icon {
-	width: 26px;
-	height: 2px;
-	border-radius: 4px;
-	background-color: var(--main-color);
-	position: relative;
-}
-
-.app-icon:before, .app-icon:after {
-	content: '';
-	position: absolute;
-	width: 12px;
-	height: 2px;
-	border-radius: 4px;
-	background-color: var(--main-color);
-	left: 50%;
-	transform: translatex(-50%);
-}
-
-.app-icon:before {
-	top: -6px;
-}
-
-.app-icon:after {
-	bottom: -6px;
-}
-
 .app-name {
 	color: var(--main-color);
 	margin: 0;
@@ -144,102 +92,6 @@ button, a {
 	font-weight: 700;
 	margin: 0 32px;
 }
-
-.mode-switch {
-	background-color: transparent;
-	border: none;
-	padding: 0;
-	color: var(--main-color);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.search-wrapper {
-	border-radius: 20px;
-	background-color: var(--search-area-bg);
-	padding-right: 12px;
-	height: 40px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	max-width: 480px;
-	color: var(--light-font);
-	box-shadow: 0 2px 6px 0 rgba(136, 148, 171, .2), 0 24px 20px -24px
-		rgba(71, 82, 107, .1);
-	overflow: hidden;
-}
-
-.dark .search-wrapper {
-	box-shadow: none;
-}
-
-.search-input {
-	border: none;
-	flex: 1;
-	outline: none;
-	height: 100%;
-	padding: 0 20px;
-	font-size: 16px;
-	background-color: var(--search-area-bg);
-	color: var(--main-color);
-}
-
-.search-input:placeholder {
-	color: var(--main-color);
-	opacity: 0.6;
-}
-
-.add-btn {
-	color: #fff;
-	background-color: var(--button-bg);
-	padding: 0;
-	border: 0;
-	border-radius: 50%;
-	width: 32px;
-	height: 32px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.notification-btn {
-	color: var(--main-color);
-	padding: 0;
-	border: 0;
-	background-color: transparent;
-	height: 32px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.profile-btn {
-	padding: 0;
-	border: 0;
-	background-color: transparent;
-	display: flex;
-	align-items: center;
-	padding-left: 12px;
-	border-left: 2px solid #ddd;
-}
-
-.profile-btn img {
-	width: 32px;
-	height: 32px;
-	object-fit: cover;
-	border-radius: 50%;
-	margin-right: 4px;
-}
-
-.profile-btn span {
-	color: var(--main-color);
-	font-size: 16px;
-	line-height: 24px;
-	font-weight: 700;
-}
-
 .page-content {
 	flex: 1;
 	width: 100%;
@@ -890,21 +742,6 @@ bottom: 0;
 	fill: var(--main-color);
 }
 
-.messages-btn {
-	border-radius: 4px 0 0 4px;
-	position: absolute;
-	right: 0;
-	top: 58px;
-	background-color: var(--message-btn);
-	border: none;
-	color: var(--main-color);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 4px;
-	display: none;
-}
-
 @media screen and (max-width: 980px) {
 	.project-boxes.jsGridView .project-box-wrapper {
 		width: 50%;
@@ -939,23 +776,6 @@ bottom: 0;
 	}
 }
 
-@media screen and (max-width: 720px) {
-	.app-name, .profile-btn span {
-		display: none;
-	}
-	.add-btn, .notification-btn, .mode-switch {
-		width: 20px;
-		height: 20px;
-	}
-	.add-btn svg, .notification-btn svg, .mode-switch svg {
-		width: 16px;
-		height: 16px;
-	}
-	.app-header-right button {
-		margin-left: 4px;
-	}
-}
-
 @media screen and (max-width: 520px) {
 	.projects-section {
 		overflow: auto;
@@ -976,21 +796,8 @@ bottom: 0;
 		width: 24px;
 		height: 24px;
 	}
-	.app-header {
-		padding: 16px 10px;
-	}
-	.search-input {
-		max-width: 120px;
-	}
 	.project-boxes.jsGridView .project-box-wrapper {
 		width: 100%;
-	}
-	.projects-section {
-		padding: 24px 16px 0 16px;
-	}
-	.profile-btn img {
-		width: 24px;
-		height: 24px;
 	}
 	.app-header {
 		padding: 10px;
