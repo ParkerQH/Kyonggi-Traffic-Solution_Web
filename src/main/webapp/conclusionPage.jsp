@@ -13,6 +13,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
+<script> //화면 깜박임 방지
+(function() {
+  try {
+    var isDark = localStorage.getItem('dark-mode') === 'true';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="stylesheet" href="resource/css/conclusion.css">
 </head>
 <body>
