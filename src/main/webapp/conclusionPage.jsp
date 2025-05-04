@@ -102,7 +102,7 @@
 								</div>
 								<div class="box-content-text">
 									<section class="conclusion">
-									<h2><%=date%>/<%=region%>/<%=brand%>></h2>
+									<h2><%=date%>/<%=region%>/<%=brand%></h2>
 										<p>
 											<strong>위반 사항 :&nbsp;</strong>
 											<%=title%></p>

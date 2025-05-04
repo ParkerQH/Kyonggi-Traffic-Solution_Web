@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>상단 헤더 페이지</title>
-<!-- <link rel="stylesheet" href="resource/css/main.css"> -->
+<link rel="stylesheet" href="resource/css/header.css">
 </head>
 <body>
 	<div class="app-header">
@@ -29,6 +29,7 @@
 			--%>
 		</div>
 		<div class="app-header-right">
+		<a href="logout.jsp?" class="logout-link">Logout</a>
 			<button class="mode-switch" title="Switch Theme">
 				<svg class="moon" fill="none" stroke="currentColor"
 					stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
