@@ -285,3 +285,7 @@ a.logout-link {
 	color: white;
 	text-decoration: none;
 }
+
+.dark .feather {
+	color: white;
+}
