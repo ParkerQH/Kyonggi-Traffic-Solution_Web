@@ -39,7 +39,7 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	padding: 16px 24px;
+	padding: 16px 24px 0 24px;
 	position: relative;
 }
 
@@ -261,6 +261,20 @@ body {
 	}
 }
 
+.messages-btn {
+	border-radius: 4px 0 0 4px;
+	position: absolute;
+	right: 0;
+	top: 58px;
+	background-color: var(--message-btn);
+	border: none;
+	color: var(--main-color);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 4px;
+	display: none;
+}
 /* 로그아웃 링크 스타일 */
 a.logout-link {
 	color: black;
