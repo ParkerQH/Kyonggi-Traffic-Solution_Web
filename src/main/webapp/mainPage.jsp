@@ -16,6 +16,12 @@
 <title></title>
 <link rel="stylesheet" href="resource/css/main.css">
 </head>
+<%
+if (session.getAttribute("loggedInUser") == null) {
+	response.sendRedirect("login.jsp");
+	return;
+}
+%>
 <body>
 	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
