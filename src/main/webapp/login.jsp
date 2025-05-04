@@ -60,10 +60,11 @@
 			String id = request.getParameter("id");
 			String password = request.getParameter("password");
 			boolean isValid = false; // 기본값을 false로 설정
-			String userName = null;
+			String managerName = null;
+			String managerRegion = null;
 			if (id != null && password != null) {
 				// SQL 쿼리로 로그인 검증
-				String query = "SELECT pw, name FROM User WHERE user_id = ?";
+				String query = "SELECT pw, name, region FROM Manager WHERE manager_id = ?";
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 
@@ -77,12 +78,14 @@
 						// 비밀번호가 일치하면 로그인 성공
 						if (password.equals(dbPassword)) {
 							isValid = true;
-							userName = rs.getString("name");
+							managerName = rs.getString("name");
+							managerRegion = rs.getString("region");
 						}
 					}
 
 					if (isValid) {
-						session.setAttribute("loggedInUser", userName);
+						session.setAttribute("loggedInManager", managerName);
+						session.setAttribute("managerRegion", managerRegion);
 			%>
 			<script>
 				window.location.href = "mainPage.jsp"; // 로그인 성공 후 리다이렉션
