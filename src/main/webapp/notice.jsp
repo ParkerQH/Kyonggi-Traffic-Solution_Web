@@ -28,7 +28,7 @@
 		</div>
 		<div class="messages">
 			<%
-			DateTimeFormatter format_nt = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);		
+			DateTimeFormatter format_nt = DateTimeFormatter.ofPattern("yyyy. MM. dd");		
 			String sql_nt = "SELECT * FROM notice ORDER BY notice_id DESC;";
 			PreparedStatement pstmt_nt = conn.prepareStatement(sql_nt);
 			ResultSet rs_nt = pstmt_nt.executeQuery();

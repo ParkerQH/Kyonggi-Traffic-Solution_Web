@@ -84,7 +84,8 @@
 					}
 
 					if (isValid) {
-						session.setAttribute("loggedInManager", managerName);
+						session.setAttribute("managerId", id);
+						session.setAttribute("managerName", managerName);
 						session.setAttribute("managerRegion", managerRegion);
 			%>
 			<script>

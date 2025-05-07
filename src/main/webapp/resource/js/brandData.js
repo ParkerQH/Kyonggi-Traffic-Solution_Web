@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (sidebarLinks.length > 0) {
 		// 1. 현재 URL 기반 active 클래스 부여
 		const currentUrl = new URL(window.location.href);
-		const currentFilter = currentUrl.searchParams.get('filter') || 'all';
+		const currentFilter = currentUrl.searchParams.get('filter') || 'send';
 
 		sidebarLinks.forEach(link => {
 			const linkFilter = link.getAttribute('data-filter');
