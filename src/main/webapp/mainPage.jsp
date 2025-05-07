@@ -197,7 +197,7 @@ if (session.getAttribute("managerId") == null) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '미확인' "
 							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("confirmed".equals(filter)) {
-							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인'  "
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result in ('승인','반려') "
 							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("folder".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
