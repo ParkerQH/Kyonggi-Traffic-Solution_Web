@@ -137,7 +137,7 @@ if (session.getAttribute("managerId") == null) {
 											<input type="hidden" name="barcolar" value="<%=bar%>">
 											<input type="hidden" name="reportId" value="<%=reportId%>">
 											<input type="hidden" name="date" value="<%=today%>">
-											<input type="hidden" name="managerId" value="<%=today%>">
+											<input type="hidden" name="managerId" value="<%=(String) session.getAttribute("managerId")%>">
 											<div class="form-group">
 												<label for="result">결과 :</label> <select id="result"
 													name="result" onchange="updateRegions()">

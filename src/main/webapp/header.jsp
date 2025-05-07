@@ -52,7 +52,7 @@
 				<span>&nbsp;<%=managerRegion %></span>
 			</button>
 			<%
-			String name = (String) session.getAttribute("loggedInManager");
+			String name = (String) session.getAttribute("managerName");
 			%>
 			<button class="profile-btn">
 				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
