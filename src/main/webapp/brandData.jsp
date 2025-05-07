@@ -14,17 +14,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<script>
-	//화면 깜빡임 방지
-	(function() {
-		try {
-			var isDark = localStorage.getItem('dark-mode') === 'true';
-			if (isDark) {
-				document.documentElement.classList.add('dark');
-			}
-		} catch (e) {
-		}
-	})();
+<script> //화면 깜빡임 방지
+(function() {
+  try {
+    var isDark = localStorage.getItem('dark-mode') === 'true';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    }
+  } catch (e) {}
+})();
 </script>
 
 <link rel="stylesheet" href="resource/css/main.css">
@@ -43,22 +41,20 @@ if (session.getAttribute("managerId") == null) {
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 전체, 브랜드별--%>
-				<a href="mainPage.jsp" class="app-sidebar-link" data-filter="all">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				<a href="mainPage.jsp" class="app-sidebar-link"> <svg
+						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-home"> <path
 							d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <polyline
 							points="9 22 9 12 15 12 15 22" /></svg>
-				</a> <a href="mainPage.jsp" class="app-sidebar-link"
-					data-filter="unconfirmed"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="mainPage.jsp?filter=unconfirmed" class="app-sidebar-link">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-square">
 						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-				</a> <a href="mainPage.jsp" class="app-sidebar-link"
-					data-filter="confirmed"> <svg
+				</a> <a href="mainPage.jsp?filter=confirmed" class="app-sidebar-link"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -66,21 +62,21 @@ if (session.getAttribute("managerId") == null) {
 						<polyline points="9 11 12 14 22 4"></polyline>
 						<path
 							d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-				</a> <a href="mainPage.jsp" class="app-sidebar-link"
-					data-filter="folder"> <svg xmlns="http://www.w3.org/2000/svg"
-						width="24" height="24" viewBox="0 0 24 24" fill="none"
-						stroke="currentColor" stroke-width="2" stroke-linecap="round"
-						stroke-linejoin="round" class="feather feather-folder">
+				</a> <a href="mainPage.jsp?filter=folder" class="app-sidebar-link"> <svg
+						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+						viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						class="feather feather-folder">
 						<path
 							d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-				</a> <a href="brandData.jsp" class="app-sidebar-link"> <svg
+				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="send"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-send">
 						<line x1="22" y1="2" x2="11" y2="13"></line>
 						<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-				</a> <a href="brandData.jsp" class="app-sidebar-link"> <svg
+				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="list"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -91,18 +87,8 @@ if (session.getAttribute("managerId") == null) {
 				</a>
 			</div>
 			<div class="projects-section">
-				<%
-				String filter = request.getParameter("filter");
-				String pageTitle;
-				if ("all".equals(filter) || filter == null)
-					pageTitle = "HOME";
-				else if ("folder".equals(filter))
-					pageTitle = "신고 내역 전체보기";
-				else
-					pageTitle = "오늘 신고 접수내역";
-				%>
 				<div class="projects-section-header">
-					<a href="mainPage.jsp" style="text-decoration: none;"><p><%=pageTitle%></p></a>
+					<a href="mainPage.jsp" style="text-decoration: none;"><p>브랜드별 신고 내역</p></a>
 					<%
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
@@ -192,6 +178,8 @@ if (session.getAttribute("managerId") == null) {
 					int n = 0;
 					String background;
 					String bar;
+					String filter = request.getParameter("filter");
+
 					try {
 						if ("unconfirmed".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '미확인' "
@@ -199,11 +187,14 @@ if (session.getAttribute("managerId") == null) {
 						} else if ("confirmed".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인'  "
 							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
+						} else if ("rejected".equals(filter)) {
+							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '반려'  "
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						} else if ("folder".equals(filter)) {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id ORDER BY report.date DESC;";
 						} else {
 							sql = "SELECT * FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id "
-							+ "AND MONTH(report.date) = '" + month + "' " + "ORDER BY report.date DESC;";
+							+ "AND report.date = '" + today + "' " + "ORDER BY report.date DESC;";
 						}
 
 						pstmt = conn.prepareStatement(sql);
@@ -351,6 +342,6 @@ if (session.getAttribute("managerId") == null) {
 			%>
 		</div>
 	</div>
-	<script src="resource/js/main.js"></script>
+	<script src="resource/js/brandData.js"></script>
 </body>
 </html>

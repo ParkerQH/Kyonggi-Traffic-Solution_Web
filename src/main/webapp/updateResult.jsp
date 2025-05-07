@@ -9,6 +9,10 @@ request.setCharacterEncoding("UTF-8");
 
 // 폼 데이터 수집
 String reportId = request.getParameter("reportId");
+String background = request.getParameter("backcolar");
+String bar = request.getParameter("barcolar");
+String managerId = request.getParameter("managerId");
+String date = request.getParameter("date");
 String result = request.getParameter("result");
 String fine = request.getParameter("fine");
 String reseon = request.getParameter("reseon");

@@ -27,6 +27,12 @@
 </script>
 <link rel="stylesheet" href="resource/css/conclusion.css">
 </head>
+<%
+if (session.getAttribute("managerId") == null) {
+	response.sendRedirect("login.jsp");
+	return;
+}
+%>
 <body>
 	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
@@ -127,7 +133,11 @@
 											<%=content%></p>
 										<br>
 										<form action="updateResult.jsp" method="post">
+											<input type="hidden" name="backcolar" value="<%=background%>">
+											<input type="hidden" name="barcolar" value="<%=bar%>">
 											<input type="hidden" name="reportId" value="<%=reportId%>">
+											<input type="hidden" name="date" value="<%=today%>">
+											<input type="hidden" name="managerId" value="<%=today%>">
 											<div class="form-group">
 												<label for="result">결과 :</label> <select id="result"
 													name="result" onchange="updateRegions()">
