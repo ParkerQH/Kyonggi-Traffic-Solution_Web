@@ -14,7 +14,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<script> //화면 깜박임 방지
+<script> //화면 깜빡임 방지
 (function() {
   try {
     var isDark = localStorage.getItem('dark-mode') === 'true';
@@ -93,7 +93,7 @@ if (session.getAttribute("loggedInManager") == null) {
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
-					DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
+					DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH); // "Mar 08, 2025" 형식
 					String todayDate = today.format(formatter);
 					PreparedStatement pstmt = null;
 					ResultSet rs = null;

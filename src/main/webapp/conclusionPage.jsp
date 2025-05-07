@@ -13,7 +13,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<script> //화면 깜박임 방지
+<script> //화면 깜빡임 방지
 (function() {
   try {
     var isDark = localStorage.getItem('dark-mode') === 'true';
@@ -81,7 +81,7 @@
 						if (rs.getString("conclusion.reseon") == null)
 							reseon = "";
 						else
-							reseon = rs.getString("conclusion.resion");
+							reseon = rs.getString("conclusion.reseon");
 				%>
 
 				<div class="project-boxes jsGridView">
@@ -120,8 +120,8 @@
 											<strong>신고 내용 :&nbsp;</strong>
 											<%=content%></p>
 										<br>
-										<form action="addTripAction.jsp" method="post"
-											enctype="multipart/form-data">
+										<form action="updateResult.jsp" method="post">
+											<input type="hidden" name="reportId" value="<%=reportId%>">
 											<div class="form-group">
 												<label for="result">결과 :</label> <select id="result"
 													name="result" onchange="updateRegions()">
