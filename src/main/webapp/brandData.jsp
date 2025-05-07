@@ -182,24 +182,8 @@ if (session.getAttribute("managerId") == null) {
 
 					try {
 						if ("send".equals(filter) || filter == null) {
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' AND conclusion.date = '" + today + "';";
-							pstmt = conn.prepareStatement(sql);
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							
 							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' AND conclusion.date = '" + today + "' GROUP BY conclusion.date, conclusion.brand;";
 						} else {
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인';";
-							pstmt = conn.prepareStatement(sql);
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							
 							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' GROUP BY conclusion.date, conclusion.brand ORDER BY conclusion.date DESC;";
 						}
 
@@ -211,6 +195,16 @@ if (session.getAttribute("managerId") == null) {
 							String brand = rs.getString("conclusion.brand");
 							String date = rs.getString("conclusion.date");
 
+							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' AND conclusion.date = ?;";
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, date);
+							ResultSet rst = pstmt.executeQuery();
+
+							if (rst.next()) {
+								count = rst.getInt(1);
+							}
+							rst.close();
+							
 							if (n % 6 == 0) {
 						background = "#fee4cb";
 						bar = "#ff942e";
