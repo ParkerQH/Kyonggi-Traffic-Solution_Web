@@ -13,15 +13,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<script> //화면 깜빡임 방지
-(function() {
-  try {
-    var isDark = localStorage.getItem('dark-mode') === 'true';
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    }
-  } catch (e) {}
-})();
+<script>
+	//화면 깜빡임 방지
+	(function() {
+		try {
+			var isDark = localStorage.getItem('dark-mode') === 'true';
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			}
+		} catch (e) {
+		}
+	})();
 </script>
 <link rel="stylesheet" href="resource/css/conclusion.css">
 </head>
@@ -32,10 +34,11 @@
 		<%--상단 헤더 부분--%>
 		<div class="app-content">
 			<div class="app-sidebar">
-				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 미결, 전체--%>
-				<a href="mainPage.jsp" class="app-sidebar-link active"> 
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"> 
+				<a href="mainPage.jsp" class="app-sidebar-link active"> <svg
+						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+						viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						class="feather feather-home"> 
 						<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> 
 						<polyline points="9 22 9 12 15 12 15 22" />
 				</svg>
@@ -43,7 +46,7 @@
 			</div>
 			<div class="projects-section">
 				<div class="projects-section-header">
-					<p>CONCLUSION</p>
+					<p>세부정보</p>
 					<%
 					// report 데이터 및 색상 데이터 가져오기
 					String reportId = request.getParameter("id");
@@ -52,8 +55,7 @@
 
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
-					DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd"); // "2025 .05 .07" 형식
 					String todayDate = today.format(formatter);
 					PreparedStatement pstmt = null;
 					ResultSet rs = null;
@@ -73,15 +75,15 @@
 						String region = rs.getString("report.region");
 						String title = rs.getString("report.title");
 						String content = rs.getString("report.content");
-						String conclusionPicture = rs.getString("conclusion.analytical_picture");
 						String brand = rs.getString("conclusion.brand");
+						String conclusionPicture = rs.getString("conclusion.analytical_picture");
 						String result = rs.getString("conclusion.result");
 						float accuracy = rs.getFloat("conclusion.accuracy");
-						String reseon;
-						if (rs.getString("conclusion.reseon") == null)
+						String reseon = rs.getString("conclusion.reseon");
+						if (reseon == null)
 							reseon = "";
-						else
-							reseon = rs.getString("conclusion.reseon");
+						if (brand == null)
+							brand = "확인 안됨";
 				%>
 
 				<div class="project-boxes jsGridView">
@@ -108,11 +110,15 @@
 							</div>
 							<div class="project-box-content-header">
 								<div class="box-content-left">
-									<img src="resource/images/<%=conclusionPicture%>" alt="Project Icon" class="project-icon">
+									<img src="resource/images/<%=conclusionPicture%>"
+										alt="Project Icon" class="project-icon">
 								</div>
 								<div class="box-content-text">
 									<section class="conclusion">
-									<h2><%=date%>/<%=region%>/<%=brand%></h2>
+										<h2><%=date%>/<%=region%></h2>
+										<p>
+											<strong>킥보드사 &nbsp;:&nbsp;</strong>
+											<%=brand%></p>
 										<p>
 											<strong>위반 사항 :&nbsp;</strong>
 											<%=title%></p>
@@ -149,7 +155,7 @@
 								</div>
 							</div>
 							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Progress</p>
+								<p class="box-progress-header">AI 신뢰도</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
 										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
@@ -158,7 +164,13 @@
 								</p>
 							</div>
 							<div class="project-box-footer">
-								<div class="days-left" style="color: <%=bar%>;">2 일전</div>
+								<%
+								Period period = Period.between(reportDate, today);
+								int daysBetween = period.getDays();
+								%>
+								<div class="days-left" style="color: <%=bar%>;"><%=daysBetween%>
+									일전
+								</div>
 							</div>
 						</div>
 					</div>
@@ -171,12 +183,12 @@
 			<%--우측 공지사항--%>
 			<%
 			} catch (SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 			} finally {
-				if (rs != null)
-					rs.close();
-				if (pstmt != null)
-					pstmt.close();
+			if (rs != null)
+				rs.close();
+			if (pstmt != null)
+				pstmt.close();
 			}
 			%>
 		</div>

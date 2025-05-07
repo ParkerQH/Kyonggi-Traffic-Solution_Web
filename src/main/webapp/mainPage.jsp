@@ -92,8 +92,7 @@ if (session.getAttribute("loggedInManager") == null) {
 					<%
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH); // "March 08, 2025" 형식
-					DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH); // "Mar 08, 2025" 형식
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
 					String todayDate = today.format(formatter);
 					PreparedStatement pstmt = null;
 					ResultSet rs = null;
@@ -117,7 +116,7 @@ if (session.getAttribute("loggedInManager") == null) {
 							}
 							%>
 							<span class="status-number"><%=count%></span> <span
-								class="status-type">In Progress</span>
+								class="status-type"><b>진행 중</b></span>
 						</div>
 						<div class="item-status">
 							<%
@@ -132,7 +131,7 @@ if (session.getAttribute("loggedInManager") == null) {
 							}
 							%>
 							<span class="status-number"><%=count%></span> <span
-								class="status-type">Completed</span>
+								class="status-type"><b>완료</b></span>
 						</div>
 						<div class="item-status">
 							<%
@@ -145,7 +144,7 @@ if (session.getAttribute("loggedInManager") == null) {
 							}
 							%>
 							<span class="status-number"><%=count%></span> <span
-								class="status-type">Total</span>
+								class="status-type"><b>총 신고 건수</b></span>
 						</div>
 					</div>
 					<div class="view-actions">
@@ -246,7 +245,7 @@ if (session.getAttribute("loggedInManager") == null) {
 							style="background-color: <%=background%>;">
 							<div class="project-box-header">
 								<%
-								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")); //<변경>예시 데이터(2일 전 날짜)
+								LocalDate reportDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 								String exDate = reportDate.format(formatter);
 								%>
 								<span><%=exDate%></span>
@@ -303,7 +302,7 @@ if (session.getAttribute("loggedInManager") == null) {
 								<p class="box-content-subheader"><%=content%></p>
 							</div>
 							<div class="box-progress-wrapper">
-								<p class="box-progress-header">Accuracy</p>
+								<p class="box-progress-header">AI 신뢰도</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
 										style="width: <%=(int) (accuracy * 100)%>%; background-color: <%=bar%>"></span>
