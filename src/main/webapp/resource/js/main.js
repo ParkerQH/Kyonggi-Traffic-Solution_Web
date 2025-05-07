@@ -48,27 +48,48 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	var sidebarLinks = document.querySelectorAll('.app-sidebar-link');
+	// 사이드바 링크 핸들링 (중요 수정 부분)
+	const sidebarLinks = document.querySelectorAll('.app-sidebar-link');
 	if (sidebarLinks.length > 0) {
-		sidebarLinks.forEach(function(link) {
-			link.addEventListener('click', function() {
-				sidebarLinks.forEach(function(l) {
-					l.classList.remove('active');
-				});
+		// 1. 현재 URL 기반 active 클래스 부여
+		const currentUrl = new URL(window.location.href);
+		const currentFilter = currentUrl.searchParams.get('filter');
+
+		sidebarLinks.forEach(link => {
+			const linkFilter = link.getAttribute('data-filter');
+			if ((!currentFilter && linkFilter === 'all') || linkFilter === currentFilter) {
 				link.classList.add('active');
-			});
+			}
 		});
 
-		sidebarLinks.forEach((link) => {
-			link.addEventListener("click", function(event) {
-				let filter = this.getAttribute("data-filter");
+		// 2. 클릭 이벤트 분리
+		sidebarLinks.forEach(link => {
+			link.addEventListener('click', function(e) {
+				const filter = this.getAttribute('data-filter');
+
+				// 필터가 있는 링크만 기본 동작 막기
 				if (filter) {
-					event.preventDefault(); // 필터 버튼만 기본 동작 막기
-					let currentUrl = new URL(window.location.href);
-					currentUrl.searchParams.set("filter", filter);
-					window.location.href = currentUrl.toString();
+					e.preventDefault();
+					const newUrl = new URL(window.location.href);
+					newUrl.searchParams.set('filter', filter);
+					window.location.href = newUrl.toString();
 				}
+
 			});
 		});
 	}
 });
+
+// 다크모드 토글 함수
+function toggleDarkMode() {
+  document.documentElement.classList.toggle('dark');
+  this.classList.toggle('active');
+  localStorage.setItem('dark-mode', document.documentElement.classList.contains('dark'));
+}
+
+// 뷰 전환 함수
+function toggleView(activeBtn, inactiveBtn, viewClass) {
+  activeBtn.classList.add('active');
+  inactiveBtn.classList.remove('active');
+  document.querySelector('.project-boxes').className = `project-boxes ${viewClass}`;
+}

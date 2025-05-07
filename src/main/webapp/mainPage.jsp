@@ -41,7 +41,7 @@ if (session.getAttribute("loggedInManager") == null) {
 		<div class="app-content">
 			<div class="app-sidebar">
 				<%--왼쪽 사이드바 부분 아이콘/홈페이지, 진행중, 완료, 전체, 브랜드별--%>
-				<a href="#" class="app-sidebar-link active" data-filter="all"> <svg
+				<a href="#" class="app-sidebar-link" data-filter="all"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
