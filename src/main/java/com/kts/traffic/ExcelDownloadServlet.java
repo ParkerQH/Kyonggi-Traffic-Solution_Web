@@ -144,7 +144,7 @@ public class ExcelDownloadServlet extends HttpServlet {
 
             // 응답 헤더
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment; filename=conclusion_" + System.currentTimeMillis() + ".xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename="+ brand + "_" + date + ".xlsx");
 
             workbook.write(response.getOutputStream());
             workbook.close();
