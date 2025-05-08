@@ -270,7 +270,7 @@ if (session.getAttribute("managerId") == null) {
 							</div>
 
 							<div class="project-box-footer">
-								<div class="days-left" style="color: <%=bar%>;">
+								<div class="days-left" style="color: <%=bar%>;cursor:pointer;" onclick="window.location.href='excel.php';">
 									다운로드
 								</div>
 							</div>
