@@ -26,14 +26,19 @@ public class ExcelDownloadServlet extends HttpServlet {
         String jdbcURL = props.getProperty("db.url");
         String dbUser = props.getProperty("db.user");
         String dbPass = props.getProperty("db.password");
+        String brand = request.getParameter("brand");
+        String date = request.getParameter("date");
 
         // 엑셀 워크북 생성
         try (
             Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPass);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Conclusion");
-            Workbook workbook = new XSSFWorkbook()
+        	PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Conclusion WHERE brand = ? AND date = ?");
         ) {
+        	pstmt.setString(1, brand);
+        	pstmt.setString(2, date);
+            ResultSet rs = pstmt.executeQuery();
+            Workbook workbook = new XSSFWorkbook();
+            
             Sheet sheet = workbook.createSheet("Conclusion");
 
             // 헤더 행 생성

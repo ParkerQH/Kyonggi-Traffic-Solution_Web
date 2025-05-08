@@ -276,7 +276,7 @@ if (session.getAttribute("managerId") == null) {
 
 							<div class="project-box-footer">
 								<div class="days-left" style="color: <%=bar%>;cursor:pointer;"
-									onclick="window.location.href='excelDownload';">다운로드</div>
+									onclick="window.location.href='excelDownload?brand=<%=brand%>&date=<%=date%>';">다운로드</div>
 							</div>
 						</div>
 					</div>
