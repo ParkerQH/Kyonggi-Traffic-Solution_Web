@@ -31,7 +31,7 @@ public class ExcelDownloadServlet extends HttpServlet {
         // 엑셀 워크북 생성
         try (
             Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPass);
-        	PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Conclusion WHERE brand = ? AND date = ?");
+        	PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Report INNER JOIN Conclusion ON report.report_id = conclusion.report_id WHERE conclusion.brand = ? AND conclusion.date = ?");
         ) {
         	pstmt.setString(1, brand);
         	pstmt.setString(2, date);
@@ -66,7 +66,7 @@ public class ExcelDownloadServlet extends HttpServlet {
             setAllBorders(borderStyle);
             
             // "요청명단" 0~1행, 0~5열 병합
-            sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 5));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 2));
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
             titleCell.setCellValue("요청명단");
@@ -75,32 +75,31 @@ public class ExcelDownloadServlet extends HttpServlet {
             // 0행: "관리자", "소속", "날짜"
             Row subHeaderRow = sheet.getRow(0);
             if (subHeaderRow == null) subHeaderRow = sheet.createRow(1);
-            Cell adminCell = subHeaderRow.createCell(6);
+            Cell adminCell = subHeaderRow.createCell(3);
             adminCell.setCellValue("관리자");
             adminCell.setCellStyle(boldCenterStyle);
 
-            Cell regionCell = subHeaderRow.createCell(7);
+            Cell regionCell = subHeaderRow.createCell(4);
             regionCell.setCellValue("소속");
             regionCell.setCellStyle(boldCenterStyle);
 
-            Cell dateCell = subHeaderRow.createCell(8);
+            Cell dateCell = subHeaderRow.createCell(5);
             dateCell.setCellValue("날짜");
             dateCell.setCellStyle(boldCenterStyle);
 
             // 1행: name, region, 2025-04-05 (데이터 미수집 상태이므로 그대로 출력)
             Row infoValueRow = sheet.createRow(1);
-            infoValueRow.createCell(6).setCellValue("name");
-            infoValueRow.createCell(7).setCellValue("region");
-            infoValueRow.createCell(8).setCellValue("2025-04-05");
+            infoValueRow.createCell(3).setCellValue("name");
+            infoValueRow.createCell(4).setCellValue("region");
+            infoValueRow.createCell(5).setCellValue("2025-04-05");
             // 테두리 적용
-            for (int i = 6; i <= 8; i++) {
+            for (int i = 3; i <= 5; i++) {
                 infoValueRow.getCell(i).setCellStyle(borderStyle);
             }
 
             // 2행: 컬럼명
             String[] columns = {
-                "conclusion_id", "result", "accuracy", "brand", "reseon",
-                "fine", "date", "analytical_picture", "manager_id", "report_id"
+                "관리번호","브랜드", "지역", "날짜", "시간", "사유"
             };
             Row headerRow = sheet.createRow(2);
             for (int i = 0; i < columns.length; i++) {
@@ -117,16 +116,12 @@ public class ExcelDownloadServlet extends HttpServlet {
                     Cell cell = row.createCell(i);
                     Object value = null;
                     switch (i) {
-                        case 0: value = rs.getInt("conclusion_id"); break;
-                        case 1: value = rs.getString("result"); break;
-                        case 2: value = rs.getDouble("accuracy"); break;
-                        case 3: value = rs.getString("brand"); break;
-                        case 4: value = rs.getString("reseon"); break;
-                        case 5: value = rs.getObject("fine") != null ? rs.getInt("fine") : 0; break;
-                        case 6: value = rs.getString("date"); break;
-                        case 7: value = rs.getString("analytical_picture"); break;
-                        case 8: value = rs.getString("manager_id"); break;
-                        case 9: value = rs.getObject("report_id") != null ? rs.getInt("report_id") : 0; break;
+                        case 0: value = rs.getInt("conclusion.conclusion_id"); break;
+                        case 1: value = rs.getString("conclusion.brand"); break;
+                        case 2: value = rs.getString("report.region"); break;
+                        case 3: value = rs.getString("report.date"); break;
+                        case 4: value = rs.getString("report.date"); break;
+                        case 5: value = rs.getString("report.title"); break;
                     }
                     if (value != null) {
                         if (value instanceof Number)
@@ -141,6 +136,10 @@ public class ExcelDownloadServlet extends HttpServlet {
             // 전체 컬럼 너비 자동조정 (옵션)
             for (int i = 0; i < columns.length; i++) {
                 sheet.autoSizeColumn(i);
+                
+                if (i == 0) sheet.setColumnWidth(i, 2500); // 관리번호
+                if (i == 1) sheet.setColumnWidth(i, 2500); // 브랜드
+                if (i == 2) sheet.setColumnWidth(i, 10000); // 지역
             }
 
             // 응답 헤더

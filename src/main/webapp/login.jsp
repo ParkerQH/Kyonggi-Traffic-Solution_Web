@@ -27,7 +27,7 @@
 					<i class="ri-user-3-line login__icon"></i>
 					<div class="login__box-input">
 						<input type="text" name="id" required class="login__input"
-							id="login-id" placeholder=" " /> <label for="login-id"
+							id="login-id" placeholder=" " autocomplete="off" /> <label for="login-id"
 							class="login__label">아이디</label>
 					</div>
 				</div>
