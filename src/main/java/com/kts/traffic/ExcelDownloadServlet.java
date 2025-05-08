@@ -43,7 +43,7 @@ public class ExcelDownloadServlet extends HttpServlet {
             CellStyle bigBoldCenterStyle = workbook.createCellStyle();
             Font bigBoldFont = workbook.createFont();
             bigBoldFont.setBold(true);
-            bigBoldFont.setFontHeightInPoints((short)16); // 글씨 크기
+            bigBoldFont.setFontHeightInPoints((short)18); // 글씨 크기
             bigBoldCenterStyle.setFont(bigBoldFont);
             bigBoldCenterStyle.setAlignment(HorizontalAlignment.CENTER);
             bigBoldCenterStyle.setVerticalAlignment(VerticalAlignment.CENTER);

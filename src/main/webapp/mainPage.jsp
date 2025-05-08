@@ -121,7 +121,7 @@ if (session.getAttribute("managerId") == null) {
 						<div class="item-status">
 							<%
 							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?"
-									+ "AND report.date = '" + today + "' ;";
+									+ "AND MONTH(report.date) = '" + month + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -136,7 +136,7 @@ if (session.getAttribute("managerId") == null) {
 						<div class="item-status">
 							<%
 							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?"
-									+ "AND report.date = '" + today + "' ;";
+									+ "AND MONTH(report.date) = '" + month + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -150,7 +150,7 @@ if (session.getAttribute("managerId") == null) {
 						</div>
 						<div class="item-status">
 							<%
-							sql = "SELECT COUNT(*) FROM report WHERE report.date = '" + today + "';";
+							sql = "SELECT COUNT(*) FROM report WHERE MONTH(report.date) = '" + month + "';";
 							pstmt = conn.prepareStatement(sql);
 							rs = pstmt.executeQuery();
 
