@@ -257,7 +257,7 @@ if (session.getAttribute("managerId") == null) {
 							</div>
 							<div class="project-box-content-header">
 								<p class="box-content-header"><%=brand%></p>
-								<p class="box-content-subheader"></p>
+								<p class="box-content-subheader"><%=exDate %>일자 접수 내역</p>
 							</div>
 							<div class="box-progress-wrapper">
 								<p class="box-progress-header">신고 점유율</p>
