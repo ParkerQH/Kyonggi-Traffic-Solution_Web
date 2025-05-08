@@ -1,12 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="java.util.*, java.io.*" %>
 <%
 Connection conn = null;
-
+Properties props = new Properties();
+InputStream in = application.getResourceAsStream("/WEB-INF/classes/db.properties");
+props.load(in);
 try {
-	String url = "jdbc:mysql://localhost:3306/KTSDB";
-	String user = "root";
-	String password = "parker0112!";
+	String url = props.getProperty("db.url");
+	String user = props.getProperty("db.user");
+	String password = props.getProperty("db.password");
 
 	Class.forName("com.mysql.jdbc.Driver");
 	conn = DriverManager.getConnection(url, user, password);

@@ -1,3 +1,5 @@
 .settings/
 .classpath
 .project
+WEB-INF/web.xml
+db.properties

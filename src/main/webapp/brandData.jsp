@@ -14,15 +14,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
-<script> //화면 깜빡임 방지
-(function() {
-  try {
-    var isDark = localStorage.getItem('dark-mode') === 'true';
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    }
-  } catch (e) {}
-})();
+<script>
+	//화면 깜빡임 방지
+	(function() {
+		try {
+			var isDark = localStorage.getItem('dark-mode') === 'true';
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			}
+		} catch (e) {
+		}
+	})();
 </script>
 
 <link rel="stylesheet" href="resource/css/main.css">
@@ -54,30 +56,30 @@ if (session.getAttribute("managerId") == null) {
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-square">
 						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-				</a> <a href="mainPage.jsp?filter=confirmed" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="mainPage.jsp?filter=confirmed" class="app-sidebar-link">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-check-square">
 						<polyline points="9 11 12 14 22 4"></polyline>
 						<path
 							d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-				</a> <a href="mainPage.jsp?filter=folder" class="app-sidebar-link"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="mainPage.jsp?filter=folder" class="app-sidebar-link">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-folder">
 						<path
 							d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="send"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="send">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-send">
 						<line x1="22" y1="2" x2="11" y2="13"></line>
 						<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="list"> <svg
-						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				</a> <a href="brandData.jsp" class="app-sidebar-link" data-filter="list">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 						class="feather feather-archive">
@@ -88,7 +90,8 @@ if (session.getAttribute("managerId") == null) {
 			</div>
 			<div class="projects-section">
 				<div class="projects-section-header">
-					<a href="mainPage.jsp" style="text-decoration: none;"><p>브랜드별 신고 내역</p></a>
+					<a href="mainPage.jsp" style="text-decoration: none;"><p>브랜드별
+							신고 내역</p></a>
 					<%
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
@@ -107,7 +110,7 @@ if (session.getAttribute("managerId") == null) {
 						<div class="item-status">
 							<%
 							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?"
-									+ "AND report.date = '" + today + "' ;";
+									+ "AND MONTH(report.date) = '" + month + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -122,7 +125,7 @@ if (session.getAttribute("managerId") == null) {
 						<div class="item-status">
 							<%
 							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?"
-									+ "AND report.date = '" + today + "' ;";
+									+ "AND MONTH(report.date) = '" + month + "' ;";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, "미확인");
 							rs = pstmt.executeQuery();
@@ -136,7 +139,7 @@ if (session.getAttribute("managerId") == null) {
 						</div>
 						<div class="item-status">
 							<%
-							sql = "SELECT COUNT(*) FROM report WHERE report.date = '" + today + "';";
+							sql = "SELECT COUNT(*) FROM report WHERE MONTH(report.date) = '" + month + "';";
 							pstmt = conn.prepareStatement(sql);
 							rs = pstmt.executeQuery();
 
@@ -182,7 +185,8 @@ if (session.getAttribute("managerId") == null) {
 
 					try {
 						if ("send".equals(filter) || filter == null) {
-							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' AND conclusion.date = '" + today + "' GROUP BY conclusion.date, conclusion.brand;";
+							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' AND conclusion.date = '"
+							+ today + "' GROUP BY conclusion.date, conclusion.brand;";
 						} else {
 							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != '미확인' GROUP BY conclusion.date, conclusion.brand ORDER BY conclusion.date DESC;";
 						}
@@ -201,10 +205,10 @@ if (session.getAttribute("managerId") == null) {
 							ResultSet rst = pstmt.executeQuery();
 
 							if (rst.next()) {
-								count = rst.getInt(1);
+						count = rst.getInt(1);
 							}
 							rst.close();
-							
+
 							if (n % 6 == 0) {
 						background = "#fee4cb";
 						bar = "#ff942e";
@@ -257,22 +261,22 @@ if (session.getAttribute("managerId") == null) {
 							</div>
 							<div class="project-box-content-header">
 								<p class="box-content-header"><%=brand%></p>
-								<p class="box-content-subheader"></p>
+								<p class="box-content-subheader"><%=exDate%>일자 접수 내역
+								</p>
 							</div>
 							<div class="box-progress-wrapper">
 								<p class="box-progress-header">신고 점유율</p>
 								<div class="box-progress-bar">
 									<span class="box-progress"
-										style="width: <%=(int) (((float)conclusionCount/count) * 100)%>%; background-color: <%=bar%>"></span>
+										style="width: <%=(int) (((float) conclusionCount / count) * 100)%>%; background-color: <%=bar%>"></span>
 								</div>
-								<p class="box-progress-percentage"><%=(int) (((float)conclusionCount/count) * 100)%>%
+								<p class="box-progress-percentage"><%=(int) (((float) conclusionCount / count) * 100)%>%
 								</p>
 							</div>
 
 							<div class="project-box-footer">
-								<div class="days-left" style="color: <%=bar%>;">
-									다운로드
-								</div>
+								<div class="days-left" style="color: <%=bar%>;cursor:pointer;"
+									onclick="window.location.href='excelDownload?manager=<%=name %>&managerRegion=<%=managerRegion %>&brand=<%=brand%>&date=<%=date%>';">다운로드</div>
 							</div>
 						</div>
 					</div>
