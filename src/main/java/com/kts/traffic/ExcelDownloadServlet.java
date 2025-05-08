@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,9 +27,14 @@ public class ExcelDownloadServlet extends HttpServlet {
         String jdbcURL = props.getProperty("db.url");
         String dbUser = props.getProperty("db.user");
         String dbPass = props.getProperty("db.password");
+        String managerName = request.getParameter("manager");
+        String managerRegion = request.getParameter("managerRegion");
         String brand = request.getParameter("brand");
         String date = request.getParameter("date");
 
+        LocalDate now = LocalDate.now(); // 오늘 날짜
+        String today = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        
         // 엑셀 워크북 생성
         try (
             Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPass);
@@ -72,7 +79,7 @@ public class ExcelDownloadServlet extends HttpServlet {
             titleCell.setCellValue("요청명단");
             titleCell.setCellStyle(bigBoldCenterStyle);
 
-            // 0행: "관리자", "소속", "날짜"
+            // 0행: "관리자", "소속", "요청날짜"
             Row subHeaderRow = sheet.getRow(0);
             if (subHeaderRow == null) subHeaderRow = sheet.createRow(1);
             Cell adminCell = subHeaderRow.createCell(3);
@@ -84,14 +91,14 @@ public class ExcelDownloadServlet extends HttpServlet {
             regionCell.setCellStyle(boldCenterStyle);
 
             Cell dateCell = subHeaderRow.createCell(5);
-            dateCell.setCellValue("날짜");
+            dateCell.setCellValue("요청날짜");
             dateCell.setCellStyle(boldCenterStyle);
 
             // 1행: name, region, 2025-04-05 (데이터 미수집 상태이므로 그대로 출력)
             Row infoValueRow = sheet.createRow(1);
-            infoValueRow.createCell(3).setCellValue("name");
-            infoValueRow.createCell(4).setCellValue("region");
-            infoValueRow.createCell(5).setCellValue("2025-04-05");
+            infoValueRow.createCell(3).setCellValue(managerName);
+            infoValueRow.createCell(4).setCellValue(managerRegion);
+            infoValueRow.createCell(5).setCellValue(today);
             // 테두리 적용
             for (int i = 3; i <= 5; i++) {
                 infoValueRow.getCell(i).setCellStyle(borderStyle);
