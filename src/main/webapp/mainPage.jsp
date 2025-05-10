@@ -264,7 +264,6 @@ if (session.getAttribute("managerId") == null) {
 										<%
 										if (result.equals("승인")) {
 										%>
-
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
 											stroke-width="2" stroke-linecap="round"
@@ -274,7 +273,6 @@ if (session.getAttribute("managerId") == null) {
 										<%
 										} else if (result.equals("반려")) {
 										%>
-
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor"
 											stroke-width="2" stroke-linecap="round"
@@ -282,17 +280,6 @@ if (session.getAttribute("managerId") == null) {
 											<circle cx="12" cy="12" r="10"></circle>
 											<line x1="15" y1="9" x2="9" y2="15"></line>
 											<line x1="9" y1="9" x2="15" y2="15"></line></svg>
-										<%
-										} else if (result.equals("미결")) {
-										%>
-
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-help-circle">
-											<circle cx="12" cy="12" r="10"></circle>
-											<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-											<line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
 										<%
 										} else if (result.equals("미확인")) {
 										%>
