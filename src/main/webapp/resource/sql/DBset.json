@@ -1,0 +1,24 @@
+{
+	"Manager": {
+		"manager_ID": {
+			"admin1": {
+				"class": "순경",
+				"name": "김철수",
+				"pw": "1234",
+				"region": "수원"
+			},
+	  		"admin2": {
+				"class": "순경",
+				"name": "김철수",
+				"pw": "1234",
+				"region": "화성"
+			},
+			"admin3": {
+				"class": "순경",
+				"name": "김철수",
+				"pw": "1234",
+				"region": "수원"
+			}
+		}
+	}
+}
