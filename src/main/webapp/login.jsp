@@ -3,7 +3,6 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ page import="java.sql.*"%>
-<%@ include file="dbconn.jsp"%>
 
 <!DOCTYPE html>
 <html lang="en">
