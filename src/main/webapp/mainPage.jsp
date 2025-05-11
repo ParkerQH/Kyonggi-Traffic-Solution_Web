@@ -339,5 +339,6 @@ if (session.getAttribute("managerId") == null) {
 		</div>
 	</div>
 	<script src="resource/js/main.js"></script>
+	<script type="module" src="resource/js/firebase-init.js"></script>
 </body>
 </html>
