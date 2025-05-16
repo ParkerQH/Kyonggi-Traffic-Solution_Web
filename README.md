@@ -2,7 +2,7 @@
 안전규제 위반 신고를 관리할 수 있는 관리자 웹사이트
 
 - HOME 페이지
-<img src="https://github.com/user-attachments/assets/5ffcf666-db59-43a5-ab2b-c9d04646a40e">
+<img src="https://github.com/user-attachments/assets/5ffcf666-db59-43a5-ab2b-c9d04646a40e"  width=70%>
 -> 해당 월에 신고된 전체 내역을 제공합니다.
 
 - 오늘 신고 내역 페이지
