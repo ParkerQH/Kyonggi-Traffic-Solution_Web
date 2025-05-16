@@ -1,7 +1,14 @@
-# Konggi Traffic Solution Web
+# 👮🏻‍♂️ Konggi Traffic Solution Web
 안전규제 위반 신고를 관리할 수 있는 관리자 웹사이트
 
-- HOME 페이지 <br>
+## 📑 프로젝트 소개
+
+## 💻개발기간
+
+## 🔍실행방법
+
+## 🖥Preview
+- HOME 페이지
 <img src="https://github.com/user-attachments/assets/64f0c3b0-ec4b-423e-bcfe-7b5bf106a0ad"  width=95%> <br>
 -> 해당 월에 신고된 전체 내역을 제공합니다.
 
