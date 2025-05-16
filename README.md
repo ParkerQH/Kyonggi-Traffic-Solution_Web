@@ -2,13 +2,13 @@
 안전규제 위반 신고를 관리할 수 있는 관리자 웹사이트
 
 - HOME 페이지 <br>
-<img src="https://github.com/user-attachments/assets/64f0c3b0-ec4b-423e-bcfe-7b5bf106a0ad"  width=90%> <br>
+<img src="https://github.com/user-attachments/assets/64f0c3b0-ec4b-423e-bcfe-7b5bf106a0ad"  width=95%> <br>
 
 -> 해당 월에 신고된 전체 내역을 제공합니다.
 
-- 오늘 신고 내역 페이지
-![Image](https://github.com/user-attachments/assets/bfd4a262-6dd2-4954-9e27-29d182795375)
-![Image](https://github.com/user-attachments/assets/34b0ea6b-8dde-44da-85f7-c8fc22fbb974)
+- 오늘 신고 내역 페이지 <br>
+<img src="https://github.com/user-attachments/assets/53530e25-fe64-4169-8217-27ad5a3ed292"  width=95%> <br>
+<img src="https://github.com/user-attachments/assets/64f0c3b0-ec4b-423e-bcfe-7b5bf106a0ad"  width=95%> <br>
 -> 오늘 신고된 내역을 보여주며, 사이드 버튼을 통해 처리한 접수 내역과 아직 처리하지 않은 접수 내역을 분리하여 볼 수 있습니다. <br>
 -> 또한, 처리 결과(승인, 반려)에 따라 우측 상단 아이콘에 변화를 주어 처리 결과를 쉽게 확인할 수 있습니다.
 
