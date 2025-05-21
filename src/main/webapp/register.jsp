@@ -28,8 +28,8 @@
 				<div class="register__box">
 					<i class="ri-id-card-line register__icon"></i>
 					<div class="register__box-input">
-						<input type="text" required class="register__input" id="register-id" name="register-id" placeholder=" " autocomplete="off" > 
-						<label for="register-email" class="register__label">아이디</label>
+						<input type="email" required class="register__input" id="register-email" name="register-email" placeholder=" " autocomplete="off" > 
+						<label for="register-email" class="register__label">이메일</label>
 					</div>
 				</div>
 

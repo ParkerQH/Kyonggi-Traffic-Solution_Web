@@ -29,9 +29,9 @@
 				<div class="login__box">
 					<i class="ri-user-3-line login__icon"></i>
 					<div class="login__box-input">
-						<input type="text" name="id" required class="login__input"
-							id="login-id" placeholder=" " autocomplete="off" /> <label
-							for="login-id" class="login__label">아이디</label>
+						<input type="text" name="email" required class="login__input"
+							id="login-email" placeholder=" " autocomplete="off" /> <label
+							for="login-email" class="login__label">아이디</label>
 					</div>
 				</div>
 

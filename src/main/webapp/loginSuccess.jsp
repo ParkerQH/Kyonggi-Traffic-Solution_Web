@@ -2,10 +2,12 @@
 <%
 request.setCharacterEncoding("UTF-8");
 session.setMaxInactiveInterval(30 * 60);
-String managerId = request.getParameter("managerId");
+String managerUid = request.getParameter("managerUid");
+String managerEmail = request.getParameter("managerEmail");
 String managerName = request.getParameter("managerName");
 String managerRegion = request.getParameter("managerRegion");
-session.setAttribute("managerId", managerId);
+session.setAttribute("managerUid", managerUid);
+session.setAttribute("managerEmail", managerEmail);
 session.setAttribute("managerName", managerName);
 session.setAttribute("managerRegion", managerRegion);
 out.print("OK");
