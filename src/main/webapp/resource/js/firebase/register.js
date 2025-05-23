@@ -1,6 +1,6 @@
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
-import { doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js';
-import { db } from './firebase-init.js';
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
+import { db, app, auth } from './firebase-init.js';
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
 	e.preventDefault();
@@ -12,14 +12,15 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 	const region = document.getElementById('register-region').value;
 
 	try {
-		const auth = getAuth();
+		const auth = getAuth(app);
 		// 1. 회원가입 (Firebase Auth)
 		const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 		const user = userCredential.user;
 
 		// 2. Firestore에 UID를 문서 ID로 사용해 저장
-		const managerRef = doc(db, "Manager", email);
+		const managerRef = doc(db, "Manager", user.uid);
 		await setDoc(managerRef, {
+			email: email,
 			name: name,
 			class: managerClass,
 			region: region

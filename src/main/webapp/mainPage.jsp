@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="resource/css/main.css">
 </head>
 <%
-if (session.getAttribute("managerId") == null) {
+if (session.getAttribute("managerUid") == null) {
 	response.sendRedirect("login.jsp");
 	return;
 }

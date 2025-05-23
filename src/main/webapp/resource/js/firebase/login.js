@@ -1,11 +1,11 @@
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
-import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js';
-import { db } from './firebase-init.js';
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
+import { db, app, auth } from './firebase-init.js';
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
 	e.preventDefault();
 
-	const auth = getAuth();
+	const auth = getAuth(app);
 	const email = document.getElementById('login-email').value;
 	const password = document.getElementById('login-pass').value;
 
@@ -26,7 +26,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 			fetch('loginSuccess.jsp', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: `managerId=${encodeURIComponent(email)}&managerName=${encodeURIComponent(manager.name)}&managerRegion=${encodeURIComponent(manager.region)}`
+				body: `managerUid=${encodeURIComponent(user.uid)}&managerEmail=${encodeURIComponent(email)}&managerName=${encodeURIComponent(manager.name)}&managerRegion=${encodeURIComponent(manager.region)}`
 			})
 				.then(response => {
 					if (!response.ok) {
