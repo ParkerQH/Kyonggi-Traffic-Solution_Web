@@ -91,11 +91,6 @@ if (session.getAttribute("managerUid") == null) {
 				<div class="projects-section-header">
 					<p>세부정보</p>
 					<%
-					// report 데이터 및 색상 데이터 가져오기
-					String reportId = request.getParameter("id");
-					String background = request.getParameter("backcolar");
-					String bar = request.getParameter("barcolar");
-
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd"); // "2025 .05 .07" 형식
@@ -104,15 +99,10 @@ if (session.getAttribute("managerUid") == null) {
 					<p class="time"><%=todayDate%></p>
 				</div>
 				
-				<div class="project-boxes jsGridView" id="conclusion-detail-list">
-					
-						
-				</div>
+				<div class="project-boxes jsGridView" id="conclusion-detail-list"></div>
 				
 			</div>
-			<%@include file="notice.jsp"%>
-			<%--우측 공지사항--%>
-			
+			<%@include file="notice.jsp"%>			
 		</div>
 	</div>
 	<script src="resource/js/main.js"></script>

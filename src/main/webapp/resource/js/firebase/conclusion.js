@@ -112,8 +112,8 @@ async function renderConclusionDetail() {
 		const statusIcon = getStatusIcon(data.result);
 
 		// 신뢰도
-		const accuracy = data.confidence || 0;
-		const accuracyPercent = Math.round((1-accuracy) * 100);
+		const confidence = (data.confidence === 0 ? 1 : (data.confidence || 0)) * 100;
+		const accuracyPercent = Math.round(confidence);
 
 		// 이미지
 		const fileId = reportId.replace(/^conclusion_/, '');

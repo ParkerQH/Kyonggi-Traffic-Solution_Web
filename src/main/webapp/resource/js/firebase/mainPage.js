@@ -224,7 +224,7 @@ async function subscribeMonthlyReports() {
 
 				const dateStr = data.date ? data.date.toDate().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
 				const daysAgo = getDaysBetween(data.date);
-				const confidence = (1 - (data.confidence || 0)) * 100;
+				const confidence = (data.confidence === 0 ? 1 : (data.confidence || 0)) * 100;
 				const regionShort = region.length > 25 ? region.slice(0, 25) + '…' : region;
 
 				listDiv.innerHTML += `
