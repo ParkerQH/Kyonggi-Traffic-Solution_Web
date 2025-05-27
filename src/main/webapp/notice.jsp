@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>우측 공지 페이지</title>
-<link rel="stylesheet" href="resource/css/main.css">
+<!-- link rel="stylesheet" href="resource/css/main.css" -->
 <script type="module" src="./resource/js/firebase/notices.js"></script>
 </head>
 <body>

@@ -37,7 +37,6 @@ if (session.getAttribute("managerUid") == null) {
 }
 %>
 <body>
-	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
 		<%@include file="header.jsp"%>
 		<%--상단 헤더 부분--%>
@@ -110,9 +109,6 @@ if (session.getAttribute("managerUid") == null) {
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
 					String todayDate = today.format(formatter);
 					int month = LocalDate.now().getMonthValue();
-					PreparedStatement pstmt = null;
-					ResultSet rs = null;
-					int count = 0;
 					%>
 					<p class="time" id="today-date"><%=todayDate%></p>
 				</div>

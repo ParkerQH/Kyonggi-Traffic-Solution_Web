@@ -1,4 +1,4 @@
-import { collection, query, where, getCountFromServer, onSnapshot, orderBy, Timestamp, doc, getDoc, getDocs } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
+import { collection, query, where, getDocs, onSnapshot, orderBy, Timestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
 import { db } from './firebase-init.js';
 
 // 현재 날짜 및 이번 달 범위 계산
@@ -15,6 +15,27 @@ document.getElementById('today-date').textContent = now.toLocaleDateString('ko-K
 	year: 'numeric', month: '2-digit', day: '2-digit'
 });
 document.getElementById('current-month').textContent = currentMonth + 1; // 1-based로 표시
+
+function getDaysBetween(fromDateStr) {
+	if (!fromDateStr) return '';
+	let fromDate;
+	if (typeof fromDateStr === 'string') {
+		// '2025년 5월 23일 ...' 형태 처리
+		const match = fromDateStr.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
+		if (match) {
+			fromDate = new Date(`${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`);
+		} else {
+			fromDate = new Date(fromDateStr);
+		}
+	} else if (fromDateStr.toDate) {
+		fromDate = fromDateStr.toDate();
+	} else {
+		fromDate = new Date(fromDateStr);
+	}
+	const today = new Date();
+	const diffTime = today - fromDate;
+	return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+}
 
 // 관할 지역 정보 가져오기
 async function getManagerJurisdiction() {
@@ -143,15 +164,25 @@ async function subscribeMonthlyReports() {
 			return;
 		}
 
-		const listDiv = document.getElementById('conclusion-list');
-		const q = query(
-			collection(db, "Conclusion"),
-			where("date", ">=", startOfMonth),
-			where("date", "<", startOfNextMonth),
-			orderBy("date", "desc")
-		);
+		const urlParams = new URLSearchParams(window.location.search);
+		const filter = urlParams.get('filter') || 'all';
 
-		onSnapshot(q, (snapshot) => {
+		let qAll;
+		if (filter === 'folder') {
+			// 전체 기간
+			qAll = query(collection(db, "Conclusion"), orderBy("date", "desc"));
+		} else {
+			// 이번 달만
+			qAll = query(
+				collection(db, "Conclusion"),
+				where("date", ">=", startOfMonth),
+				where("date", "<", startOfNextMonth),
+				orderBy("date", "desc")
+			);
+		}
+
+		onSnapshot(qAll, (snapshot) => {
+			const listDiv = document.getElementById('conclusion-list');
 			listDiv.innerHTML = '';
 			let colorIndex = 0;
 			const colors = [
@@ -174,6 +205,10 @@ async function subscribeMonthlyReports() {
 					return; // 관할 지역이 아니면 건너뛰기
 				}
 
+				// 필터별 조건
+				if (filter === 'unconfirmed' && data.result !== '미확인') return;
+				if (filter === 'confirmed' && !(data.result === '승인' || data.result === '반려')) return;
+
 				hasMatchingData = true;
 				const color = colors[colorIndex % 6];
 				colorIndex++;
@@ -188,18 +223,19 @@ async function subscribeMonthlyReports() {
 				}
 
 				const dateStr = data.date ? data.date.toDate().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
+				const daysAgo = getDaysBetween(data.date);
 				const confidence = (1 - (data.confidence || 0)) * 100;
 				const regionShort = region.length > 25 ? region.slice(0, 25) + '…' : region;
 
 				listDiv.innerHTML += `
-	                    <div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp?id=${doc.id}';" style="cursor: pointer;">
+	                    <div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp?id=${doc.id}&backcolar=${encodeURIComponent(color.bg)}&barcolar=${encodeURIComponent(color.bar)}';" style="cursor: pointer;">
 	                        <div class="project-box" style="background-color: ${color.bg};">
 	                            <div class="project-box-header">
 	                                <span>${dateStr}</span>
 	                                <div class="more-wrapper">${statusIcon}</div>
 	                            </div>
 	                            <div class="project-box-content-header">
-	                                <p class="box-content-header">${data.violation || ''}</p>
+	                                <p class="box-content-header">${data.aiConclusion || ''}</p>
 	                                <p class="box-content-subheader">${regionShort}</p>
 	                            </div>
 	                            <div class="box-progress-wrapper">
@@ -209,13 +245,16 @@ async function subscribeMonthlyReports() {
 	                                </div>
 	                                <p class="box-progress-percentage">${Math.round(confidence)}%</p>
 	                            </div>
+								<div class="project-box-footer">
+								    <div class="days-left" style="color: ${color.bar};">${daysAgo}일전</div>
+								</div>
 	                        </div>
 	                    </div>
 	                `;
 			});
 
 			if (!hasMatchingData) {
-				listDiv.innerHTML = `<div class="project-box"><div class="project-box-content">이번 달 관할 지역 신고 내역이 없습니다.</div></div>`;
+				listDiv.innerHTML = `<div class="project-box"><div class="project-box-content">오늘 처리해야 할 관할 지역 신고 내역이 없습니다.</div></div>`;
 			}
 		});
 
