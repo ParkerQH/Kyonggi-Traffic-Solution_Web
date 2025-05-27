@@ -1,4 +1,4 @@
-import { collection, query, where, getCountFromServer, onSnapshot, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
+import { collection, query, where, getCountFromServer, onSnapshot, orderBy, Timestamp, doc, getDoc, getDocs } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
 import { db } from './firebase-init.js';
 
 // 현재 날짜 및 이번 달 범위 계산
@@ -16,49 +16,116 @@ document.getElementById('today-date').textContent = now.toLocaleDateString('ko-K
 });
 document.getElementById('current-month').textContent = currentMonth + 1; // 1-based로 표시
 
+// 관할 지역 정보 가져오기
+async function getManagerJurisdiction() {
+	try {
+		// 1. 세션에서 관리자 UID 가져오기
+		const managerUid = sessionStorage.getItem('managerUid');
+		if (!managerUid) {
+			throw new Error('로그인 정보가 없습니다.');
+		}
+
+		// 2. Manager 컬렉션에서 관리자 정보 가져오기
+		const managerRef = doc(db, 'Manager', managerUid);
+		const managerSnap = await getDoc(managerRef);
+
+		if (!managerSnap.exists()) {
+			throw new Error('관리자 정보를 찾을 수 없습니다.');
+		}
+
+		const managerData = managerSnap.data();
+		const managerRegion = managerData.region;
+
+		// 3. Police_station 컬렉션에서 해당 region과 일치하는 문서 찾기
+		const policeStationQuery = query(
+			collection(db, 'Police_station'),
+			where('__name__', '==', managerRegion)
+		);
+		const policeStationSnap = await getDocs(policeStationQuery);
+
+		if (policeStationSnap.empty) {
+			// 문서 ID로 직접 접근 시도
+			const policeStationRef = doc(db, 'Police_station', managerRegion);
+			const policeStationDoc = await getDoc(policeStationRef);
+
+			if (!policeStationDoc.exists()) {
+				throw new Error('관할 경찰서 정보를 찾을 수 없습니다.');
+			}
+
+			const jurisdiction = policeStationDoc.data().jurisdiction || [];
+			return jurisdiction;
+		}
+
+		// 4. jurisdiction 배열 가져오기
+		const policeStationData = policeStationSnap.docs[0].data();
+		const jurisdiction = policeStationData.jurisdiction || [];
+
+		return jurisdiction;
+
+	} catch (error) {
+		console.error('관할 지역 정보 가져오기 오류:', error);
+		showError('관할 지역 정보를 불러오는 중 오류가 발생했습니다.');
+		return [];
+	}
+}
+
+// 지역 매칭 함수 (region 필드에 jurisdiction 배열의 값이 포함되는지 확인)
+function isRegionInJurisdiction(region, jurisdiction) {
+	if (!region || !jurisdiction || jurisdiction.length === 0) {
+		return false;
+	}
+
+	// jurisdiction 배열의 각 항목이 region에 포함되는지 확인
+	return jurisdiction.some(area => region.includes(area));
+}
+
 // 이번 달 기준 상태별 카운트 집계
 async function updateMonthlyStats() {
 	try {
+		// 관할 지역 정보 가져오기
+		const jurisdiction = await getManagerJurisdiction();
+		if (jurisdiction.length === 0) {
+			console.warn('관할 지역이 없습니다.');
+			return;
+		}
+
+		console.log('관할 지역:', jurisdiction); // 디버깅용
+
 		// 1. 진행 중 (미확인): result가 null이면서 이번 달
-		const qUnconfirmed = query(
-			collection(db, "Conclusion"),
-			where("date", ">=", startOfMonth),
-			where("date", "<", startOfNextMonth),
-			where("result", "==", '미확인')
-		);
-		const snapUnconfirmed = await getCountFromServer(qUnconfirmed);
-		document.getElementById('count-unconfirmed').textContent = snapUnconfirmed.data().count;
-
-		// 2. 완료 (승인): result가 "승인"이면서 이번 달
-		const qApproved = query(
-			collection(db, "Conclusion"),
-			where("date", ">=", startOfMonth),
-			where("date", "<", startOfNextMonth),
-			where("result", "==", "승인")
-		);
-		const snapApproved = await getCountFromServer(qApproved);
-
-		// 3. 완료 (반려): result가 "반려"이면서 이번 달
-		const qRejected = query(
-			collection(db, "Conclusion"),
-			where("date", ">=", startOfMonth),
-			where("date", "<", startOfNextMonth),
-			where("result", "==", "반려")
-		);
-		const snapRejected = await getCountFromServer(qRejected);
-
-		// 완료 = 승인 + 반려
-		const completedCount = snapApproved.data().count + snapRejected.data().count;
-		document.getElementById('count-completed').textContent = completedCount;
-
-		// 4. 이번 달 전체 신고 건수
-		const qTotal = query(
+		const qAll = query(
 			collection(db, "Conclusion"),
 			where("date", ">=", startOfMonth),
 			where("date", "<", startOfNextMonth)
 		);
-		const snapTotal = await getCountFromServer(qTotal);
-		document.getElementById('count-total').textContent = snapTotal.data().count;
+		const snapAll = await getDocs(qAll);
+
+		let unconfirmedCount = 0;
+		let approvedCount = 0;
+		let rejectedCount = 0;
+		let totalCount = 0;
+
+		snapAll.forEach(doc => {
+			const data = doc.data();
+			const region = data.region || '';
+
+			// 관할 지역에 해당하는지 확인
+			if (isRegionInJurisdiction(region, jurisdiction)) {
+				totalCount++;
+
+				if (data.result === '미확인') {
+					unconfirmedCount++;
+				} else if (data.result === '승인') {
+					approvedCount++;
+				} else if (data.result === '반려') {
+					rejectedCount++;
+				}
+			}
+		});
+
+		// 결과 표시
+		document.getElementById('count-unconfirmed').textContent = unconfirmedCount;
+		document.getElementById('count-completed').textContent = approvedCount + rejectedCount;
+		document.getElementById('count-total').textContent = totalCount;
 
 	} catch (error) {
 		console.error("월별 통계 집계 오류:", error);
@@ -67,73 +134,95 @@ async function updateMonthlyStats() {
 }
 
 // 이번 달 신고 목록 실시간 표시
-function subscribeMonthlyReports() {
-	const listDiv = document.getElementById('conclusion-list');
-	const q = query(
-		collection(db, "Conclusion"),
-		where("date", ">=", startOfMonth),
-		where("date", "<", startOfNextMonth),
-		orderBy("date", "desc")
-	);
+async function subscribeMonthlyReports() {
+	try {
+		// 관할 지역 정보 가져오기
+		const jurisdiction = await getManagerJurisdiction();
+		if (jurisdiction.length === 0) {
+			console.warn('관할 지역이 없습니다.');
+			return;
+		}
 
-	onSnapshot(q, (snapshot) => {
-		listDiv.innerHTML = '';
-		let colorIndex = 0;
-		const colors = [
-			{ bg: "#fee4cb", bar: "#ff942e" },
-			{ bg: "#e9e7fd", bar: "#4f3ff0" },
-			{ bg: "#dbf6fd", bar: "#096c86" },
-			{ bg: "#ffd3e2", bar: "#df3670" },
-			{ bg: "#c8f7dc", bar: "#34c471" },
-			{ bg: "#d5deff", bar: "#4067f9" }
-		];
+		const listDiv = document.getElementById('conclusion-list');
+		const q = query(
+			collection(db, "Conclusion"),
+			where("date", ">=", startOfMonth),
+			where("date", "<", startOfNextMonth),
+			orderBy("date", "desc")
+		);
 
-		snapshot.forEach(doc => {
-			const data = doc.data();
-			const color = colors[colorIndex % 6];
-			colorIndex++;
+		onSnapshot(q, (snapshot) => {
+			listDiv.innerHTML = '';
+			let colorIndex = 0;
+			const colors = [
+				{ bg: "#fee4cb", bar: "#ff942e" },
+				{ bg: "#e9e7fd", bar: "#4f3ff0" },
+				{ bg: "#dbf6fd", bar: "#096c86" },
+				{ bg: "#ffd3e2", bar: "#df3670" },
+				{ bg: "#c8f7dc", bar: "#34c471" },
+				{ bg: "#d5deff", bar: "#4067f9" }
+			];
 
-			let statusIcon = '';
-			if (data.result === "승인") {
-				statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
-			} else if (data.result === "반려") {
-				statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
-			} else {
-				statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>`;
+			let hasMatchingData = false;
+
+			snapshot.forEach(doc => {
+				const data = doc.data();
+				const region = data.region || '';
+
+				// 관할 지역에 해당하는지 확인
+				if (!isRegionInJurisdiction(region, jurisdiction)) {
+					return; // 관할 지역이 아니면 건너뛰기
+				}
+
+				hasMatchingData = true;
+				const color = colors[colorIndex % 6];
+				colorIndex++;
+
+				let statusIcon = '';
+				if (data.result === "승인") {
+					statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+				} else if (data.result === "반려") {
+					statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+				} else {
+					statusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>`;
+				}
+
+				const dateStr = data.date ? data.date.toDate().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
+				const confidence = (1 - (data.confidence || 0)) * 100;
+				const regionShort = region.length > 25 ? region.slice(0, 25) + '…' : region;
+
+				listDiv.innerHTML += `
+	                    <div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp?id=${doc.id}';" style="cursor: pointer;">
+	                        <div class="project-box" style="background-color: ${color.bg};">
+	                            <div class="project-box-header">
+	                                <span>${dateStr}</span>
+	                                <div class="more-wrapper">${statusIcon}</div>
+	                            </div>
+	                            <div class="project-box-content-header">
+	                                <p class="box-content-header">${data.violation || ''}</p>
+	                                <p class="box-content-subheader">${regionShort}</p>
+	                            </div>
+	                            <div class="box-progress-wrapper">
+	                                <p class="box-progress-header">AI 신뢰도</p>
+	                                <div class="box-progress-bar">
+	                                    <span class="box-progress" style="width: ${confidence}%; background-color: ${color.bar}"></span>
+	                                </div>
+	                                <p class="box-progress-percentage">${Math.round(confidence)}%</p>
+	                            </div>
+	                        </div>
+	                    </div>
+	                `;
+			});
+
+			if (!hasMatchingData) {
+				listDiv.innerHTML = `<div class="project-box"><div class="project-box-content">이번 달 관할 지역 신고 내역이 없습니다.</div></div>`;
 			}
-
-			const dateStr = data.date ? data.date.toDate().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
-			const confidence = (1-(data.confidence || 0)) * 100;
-			const region = data.region || '';
-			const regionShort = region.length > 25 ? region.slice(0, 25) + '…' : region;
-			
-			listDiv.innerHTML += `
-                <div class="project-box-wrapper" onclick="window.location='conclusionPage.jsp?id=${doc.id}';" style="cursor: pointer;">
-                    <div class="project-box" style="background-color: ${color.bg};">
-                        <div class="project-box-header">
-                            <span>${dateStr}</span>
-                            <div class="more-wrapper">${statusIcon}</div>
-                        </div>
-                        <div class="project-box-content-header">
-                            <p class="box-content-header">${data.violation || ''}</p>
-                            <p class="box-content-subheader">${regionShort}</p>
-                        </div>
-                        <div class="box-progress-wrapper">
-                            <p class="box-progress-header">AI 신뢰도</p>
-                            <div class="box-progress-bar">
-                                <span class="box-progress" style="width: ${confidence}%; background-color: ${color.bar}"></span>
-                            </div>
-                            <p class="box-progress-percentage">${Math.round(confidence)}%</p>
-                        </div>
-                    </div>
-                </div>
-            `;
 		});
 
-		if (snapshot.empty) {
-			listDiv.innerHTML = `<div class="project-box"><div class="project-box-content">이번 달 신고 내역이 없습니다.</div></div>`;
-		}
-	});
+	} catch (error) {
+		console.error("신고 목록 조회 오류:", error);
+		showError("신고 목록을 불러오는 중 오류가 발생했습니다.");
+	}
 }
 
 function showError(message) {
