@@ -1,5 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { getFirestore, Timestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 import { db } from './firebase-init.js';
 
 // 파라미터 추출
@@ -28,24 +27,6 @@ function getDaysBetween(fromDateStr) {
 	const today = new Date();
 	const diffTime = today - fromDate;
 	return Math.floor(diffTime / (1000 * 60 * 60 * 24));
-}
-
-function getKoreanDateString(date = new Date()) {
-    // 한국 시간대 보정
-    const options = {
-        year: 'numeric',
-        month: 'long', // 'numeric'이면 '5월', 'long'이면 '5월'
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-        timeZone: 'Asia/Seoul'
-    };
-    // "2025년 5월 23일 오후 7시 50분 0초" 형식
-    const dateStr = date.toLocaleString('ko-KR', options);
-    // UTC+9 표시 추가
-    return `${dateStr} UTC+9`;
 }
 
 // 4. 상태 아이콘 SVG
@@ -190,15 +171,14 @@ async function renderConclusionDetail() {
 		// 폼 이벤트 등록
 		document.getElementById('updateForm').addEventListener('submit', async function(e) {
 			e.preventDefault();
-			
-			const date = getKoreanDateString();
+
 			const formData = new FormData(this);
 			const updateData = {
 				result: formData.get('result'),
 				fine: formData.get('fine'),
 				reseon: formData.get('reseon'),
 				managerId: formData.get('managerId'),
-				processingDate: date
+				processingDate: Timestamp.now()
 			};
 			try {
 				await updateDoc(docRef, updateData);

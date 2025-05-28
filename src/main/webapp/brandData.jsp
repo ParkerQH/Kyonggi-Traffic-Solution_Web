@@ -13,6 +13,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="module" src="./resource/js/firebase/brandData.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <title></title>
 <script>
 	//화면 깜빡임 방지
@@ -36,7 +38,6 @@ if (session.getAttribute("managerUid") == null) {
 }
 %>
 <body>
-	<%@include file="dbconn.jsp"%>
 	<div class="app-container">
 		<%@include file="header.jsp"%>
 		<%--상단 헤더 부분--%>
@@ -90,65 +91,30 @@ if (session.getAttribute("managerUid") == null) {
 			</div>
 			<div class="projects-section">
 				<div class="projects-section-header">
-					<a href="mainPage.jsp" style="text-decoration: none;"><p>브랜드별
-							신고 내역</p></a>
+					<p>브랜드별 신고 내역</p>
 					<%
 					// 현재 날짜 가져오기
 					LocalDate today = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
 					String todayDate = today.format(formatter);
 					int month = LocalDate.now().getMonthValue();
-					PreparedStatement pstmt = null;
-					ResultSet rs = null;
-					int count = 0;
 					%>
-					<p class="time"><%=todayDate%></p>
+					<p class="time" id="todayDate"></p>
 				</div>
 				<div class="projects-section-line">
 					<%--신고 접수 건수를 보여주는 부분--%>
 					<div class="projects-status">
 						<div class="item-status">
-							<%
-							String sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = ?"
-									+ "AND MONTH(report.date) = '" + month + "' ;";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.setString(1, "미확인");
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type"><b>진행 중</b></span>
+							<span class="status-number" id="count-unconfirmed">0</span>
+							<span class="status-type"><b>진행 중</b></span>
 						</div>
 						<div class="item-status">
-							<%
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result != ?"
-									+ "AND MONTH(report.date) = '" + month + "' ;";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.setString(1, "미확인");
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type"><b>완료</b></span>
+							<span class="status-number" id="count-completed">0</span>
+							<span class="status-type"><b>완료</b></span>
 						</div>
 						<div class="item-status">
-							<%
-							sql = "SELECT COUNT(*) FROM report WHERE MONTH(report.date) = '" + month + "';";
-							pstmt = conn.prepareStatement(sql);
-							rs = pstmt.executeQuery();
-
-							if (rs.next()) {
-								count = rs.getInt(1);
-							}
-							%>
-							<span class="status-number"><%=count%></span> <span
-								class="status-type"><b><%=month%>월 신고 건수</b></span>
+							<span class="status-number" id="count-total">0</span>
+							<span class="status-type"><b><span id="current-month"><%=month%></span>월 신고 건수</b></span>
 						</div>
 					</div>
 					<div class="view-actions">
@@ -176,127 +142,12 @@ if (session.getAttribute("managerUid") == null) {
 						</button>
 					</div>
 				</div>
-				<div class="project-boxes jsGridView">
-					<%
-					int n = 0;
-					String background;
-					String bar;
-					String filter = request.getParameter("filter");
-
-					try {
-						if ("send".equals(filter) || filter == null) {
-							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인' AND conclusion.date = '"
-							+ today + "' GROUP BY conclusion.date, conclusion.brand;";
-						} else {
-							sql = "SELECT conclusion.brand, conclusion.date , COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인' GROUP BY conclusion.date, conclusion.brand ORDER BY conclusion.date DESC;";
-						}
-
-						pstmt = conn.prepareStatement(sql);
-						rs = pstmt.executeQuery();
-
-						while (rs.next()) {
-							int conclusionCount = rs.getInt(3);
-							String brand = rs.getString("conclusion.brand");
-							String date = rs.getString("conclusion.date");
-
-							sql = "SELECT COUNT(*) FROM report INNER JOIN conclusion ON report.report_id = conclusion.report_id WHERE conclusion.result = '승인' AND conclusion.date = ?;";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.setString(1, date);
-							ResultSet rst = pstmt.executeQuery();
-
-							if (rst.next()) {
-						count = rst.getInt(1);
-							}
-							rst.close();
-
-							if (n % 6 == 0) {
-						background = "#fee4cb";
-						bar = "#ff942e";
-						n++;
-							} else if (n % 6 == 1) {
-						background = "#e9e7fd";
-						bar = "#4f3ff0";
-						n++;
-							} else if (n % 6 == 2) {
-						background = "#dbf6fd";
-						bar = "#096c86";
-						n++;
-							} else if (n % 6 == 3) {
-						background = "#ffd3e2";
-						bar = "#df3670";
-						n++;
-							} else if (n % 6 == 4) {
-						background = "#c8f7dc";
-						bar = "#34c471";
-						n++;
-							} else {
-						background = "#d5deff";
-						bar = "#4067f9";
-						n = 0;
-							}
-					%>
-					<%
-					String backColor = (background != null) ? URLEncoder.encode(background, "UTF-8") : "";
-					String barColor = (bar != null) ? URLEncoder.encode(bar, "UTF-8") : "";
-					%>
-					<div class="project-box-wrapper">
-						<div class="project-box"
-							style="background-color: <%=background%>;">
-							<div class="project-box-header">
-								<%
-								LocalDate conclusionDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-								String exDate = conclusionDate.format(formatter);
-								%>
-								<span><%=exDate%></span>
-								<div class="more-wrapper">
-									<button class="project-btn-more">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" stroke="currentColor"
-											stroke-width="2" stroke-linecap="round"
-											stroke-linejoin="round" class="feather feather-check-circle">
-											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-											<polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-									</button>
-								</div>
-							</div>
-							<div class="project-box-content-header">
-								<p class="box-content-header"><%=brand%></p>
-								<p class="box-content-subheader"><%=exDate%>일자 접수 내역
-								</p>
-							</div>
-							<div class="box-progress-wrapper">
-								<p class="box-progress-header">신고 점유율</p>
-								<div class="box-progress-bar">
-									<span class="box-progress"
-										style="width: <%=(int) (((float) conclusionCount / count) * 100)%>%; background-color: <%=bar%>"></span>
-								</div>
-								<p class="box-progress-percentage"><%=(int) (((float) conclusionCount / count) * 100)%>%
-								</p>
-							</div>
-
-							<div class="project-box-footer">
-								<div class="days-left" style="color: <%=bar%>;cursor:pointer;"
-									onclick="window.location.href='excelDownload?manager=<%=name %>&managerRegion=<%=managerRegion %>&brand=<%=brand%>&date=<%=date%>';">다운로드</div>
-							</div>
-						</div>
-					</div>
-					<%
-					}
-					%>
+				<div class="project-boxes jsGridView"  id="brand-data-list">
+					
 				</div>
 			</div>
 			<%@include file="notice.jsp"%>
-			<%--우측 공지사항--%>
-			<%
-			} catch (SQLException e) {
-			e.printStackTrace();
-			} finally {
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-			}
-			%>
+			
 		</div>
 	</div>
 	<script src="resource/js/brandData.js"></script>
