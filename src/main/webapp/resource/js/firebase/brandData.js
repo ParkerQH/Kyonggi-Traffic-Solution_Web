@@ -154,61 +154,15 @@ function renderBrandData(groupedData, totalCount) {
 
 // 엑셀 다운로드 (새로운 Firestore 기반)
 window.downloadExcel = async function(brand, date) {
-	try {
-		const managerId = sessionStorage.getItem('managerId');
-		const managerName = sessionStorage.getItem('managerName') || '';
-		const managerRegion = sessionStorage.getItem('managerRegion') || '';
+	const managerId = sessionStorage.getItem('managerUid');
+	const managerName = sessionStorage.getItem('managerName') || '';
+	const managerRegion = sessionStorage.getItem('managerRegion') || '';
 
-		// 해당 브랜드+날짜의 conclusion 데이터 가져오기
-		const q = query(
-			collection(db, 'Conclusion'),
-			where('result', '==', '승인'),
-			where('managerId', '==', managerId),
-			where('detectedBrand', '==', brand),
-			where('processingDate', '>=', date),
-			where('processingDate', '<', getNextDay(date))
-		);
+	// 서블릿으로 바로 이동
+	const url = `excelDownload?managerId=${encodeURIComponent(managerId)}&brand=${encodeURIComponent(brand)}&date=${encodeURIComponent(date)}&manager=${encodeURIComponent(managerName)}&managerRegion=${encodeURIComponent(managerRegion)}`;
 
-		const querySnapshot = await getDocs(q);
-		const data = [];
-
-		querySnapshot.forEach((doc) => {
-			const docData = doc.data();
-			data.push({
-				id: doc.id,
-				detectedBrand: docData.detectedBrand || '',
-				gpsInfo: docData.gpsInfo || '',
-				region: docData.region || '',
-				date: docData.date || '',
-				reseon: docData.reseon || '',
-				fine: docData.fine || 0
-			});
-		});
-
-		// 엑셀 생성 및 다운로드 (별도 함수)
-		generateExcel(data, brand, date, managerName, managerRegion);
-
-	} catch (error) {
-		console.error('엑셀 다운로드 실패:', error);
-		alert('엑셀 다운로드에 실패했습니다.');
-	}
+	window.location.href = url;
 };
-
-// 엑셀 생성 함수 (SheetJS 라이브러리 사용 권장)
-function generateExcel(data, brand, date, managerName, managerRegion) {
-	// SheetJS 라이브러리가 필요함
-	// <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-	const worksheet = XLSX.utils.json_to_sheet(data, {
-		header: ['id', 'detectedBrand', 'gpsInfo', 'region', 'date', 'reseon', 'fine']
-	});
-
-	const workbook = XLSX.utils.book_new();
-	XLSX.utils.book_append_sheet(workbook, worksheet, '요청명단');
-
-	const fileName = `${brand}_${date.replace(/\. /g, '')}.xlsx`;
-	XLSX.writeFile(workbook, fileName);
-}
 
 // 메인 렌더링 함수
 async function loadAndRenderBrandData() {

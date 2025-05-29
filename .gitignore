@@ -4,3 +4,4 @@
 WEB-INF/web.xml
 db.properties
 firebase-init.js
+serviceAccountKey.json
