@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, onSnapshot, orderBy, Timestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
+import { collection, query, where, getDocs, onSnapshot, orderBy, Timestamp, doc, getDoc} from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js';
 import { db } from './firebase-init.js';
 
 // 현재 날짜 및 이번 달 범위 계산
@@ -33,8 +33,9 @@ function getDaysBetween(fromDateStr) {
 		fromDate = new Date(fromDateStr);
 	}
 	const today = new Date();
-	const diffTime = today - fromDate;
-	return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+	const utcFrom = Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+	const utcToday = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+	return Math.floor((utcToday - utcFrom) / (1000 * 60 * 60 * 24));
 }
 
 // 관할 지역 정보 가져오기
@@ -170,11 +171,12 @@ async function subscribeMonthlyReports() {
 		let qAll;
 		if (filter === 'folder') {
 			// 전체 기간
-			qAll = query(collection(db, "Conclusion"), orderBy("date", "desc"));
+			qAll = query(collection(db, "Conclusion"), where("aiConclusion", "not-in", ["사람 감지 실패", "킥보드 감지 실패"]), orderBy("date", "desc"));
 		} else {
 			// 이번 달만
 			qAll = query(
 				collection(db, "Conclusion"),
+				where("aiConclusion", "not-in", ["사람 감지 실패", "킥보드 감지 실패"]),
 				where("date", ">=", startOfMonth),
 				where("date", "<", startOfNextMonth),
 				orderBy("date", "desc")
@@ -196,7 +198,7 @@ async function subscribeMonthlyReports() {
 
 			let hasMatchingData = false;
 
-			snapshot.forEach(doc => {
+			snapshot.forEach(async doc => {
 				const data = doc.data();
 				const region = data.region || '';
 

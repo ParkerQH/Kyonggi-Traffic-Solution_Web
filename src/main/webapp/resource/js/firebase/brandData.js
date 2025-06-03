@@ -1,5 +1,131 @@
-import { getFirestore, Timestamp, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { Timestamp, collection, query, where, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 import { db } from './firebase-init.js';
+
+// 현재 날짜 및 이번 달 범위 계산
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = now.getMonth(); // 0-based (0=1월, 4=5월)
+
+// 이번 달 시작일과 다음 달 시작일 (Firestore Timestamp)
+const startOfMonth = Timestamp.fromDate(new Date(currentYear, currentMonth, 1));
+const startOfNextMonth = Timestamp.fromDate(new Date(currentYear, currentMonth + 1, 1));
+
+// 관할 지역 정보 가져오기
+async function getManagerJurisdiction() {
+	try {
+		// 1. 세션에서 관리자 UID 가져오기
+		const managerUid = sessionStorage.getItem('managerUid');
+		if (!managerUid) {
+			throw new Error('로그인 정보가 없습니다.');
+		}
+
+		// 2. Manager 컬렉션에서 관리자 정보 가져오기
+		const managerRef = doc(db, 'Manager', managerUid);
+		const managerSnap = await getDoc(managerRef);
+
+		if (!managerSnap.exists()) {
+			throw new Error('관리자 정보를 찾을 수 없습니다.');
+		}
+
+		const managerData = managerSnap.data();
+		const managerRegion = managerData.region;
+
+		// 3. Police_station 컬렉션에서 해당 region과 일치하는 문서 찾기
+		const policeStationQuery = query(
+			collection(db, 'Police_station'),
+			where('__name__', '==', managerRegion)
+		);
+		const policeStationSnap = await getDocs(policeStationQuery);
+
+		if (policeStationSnap.empty) {
+			// 문서 ID로 직접 접근 시도
+			const policeStationRef = doc(db, 'Police_station', managerRegion);
+			const policeStationDoc = await getDoc(policeStationRef);
+
+			if (!policeStationDoc.exists()) {
+				throw new Error('관할 경찰서 정보를 찾을 수 없습니다.');
+			}
+
+			const jurisdiction = policeStationDoc.data().jurisdiction || [];
+			return jurisdiction;
+		}
+
+		// 4. jurisdiction 배열 가져오기
+		const policeStationData = policeStationSnap.docs[0].data();
+		const jurisdiction = policeStationData.jurisdiction || [];
+
+		return jurisdiction;
+
+	} catch (error) {
+		console.error('관할 지역 정보 가져오기 오류:', error);
+		showError('관할 지역 정보를 불러오는 중 오류가 발생했습니다.');
+		return [];
+	}
+}
+
+// 지역 매칭 함수 (region 필드에 jurisdiction 배열의 값이 포함되는지 확인)
+function isRegionInJurisdiction(region, jurisdiction) {
+	if (!region || !jurisdiction || jurisdiction.length === 0) {
+		return false;
+	}
+
+	// jurisdiction 배열의 각 항목이 region에 포함되는지 확인
+	return jurisdiction.some(area => region.includes(area));
+}
+
+// 이번 달 기준 상태별 카운트 집계
+async function updateMonthlyStats() {
+	try {
+		// 관할 지역 정보 가져오기
+		const jurisdiction = await getManagerJurisdiction();
+		if (jurisdiction.length === 0) {
+			console.warn('관할 지역이 없습니다.');
+			return;
+		}
+
+		console.log('관할 지역:', jurisdiction); // 디버깅용
+
+		// 1. 진행 중 (미확인): result가 null이면서 이번 달
+		const qAll = query(
+			collection(db, "Conclusion"),
+			where("date", ">=", startOfMonth),
+			where("date", "<", startOfNextMonth)
+		);
+		const snapAll = await getDocs(qAll);
+
+		let unconfirmedCount = 0;
+		let approvedCount = 0;
+		let rejectedCount = 0;
+		let totalCount = 0;
+
+		snapAll.forEach(doc => {
+			const data = doc.data();
+			const region = data.region || '';
+
+			// 관할 지역에 해당하는지 확인
+			if (isRegionInJurisdiction(region, jurisdiction)) {
+				totalCount++;
+
+				if (data.result === '미확인') {
+					unconfirmedCount++;
+				} else if (data.result === '승인') {
+					approvedCount++;
+				} else if (data.result === '반려') {
+					rejectedCount++;
+				}
+			}
+		});
+
+		// 결과 표시
+		document.getElementById('count-unconfirmed').textContent = unconfirmedCount;
+		document.getElementById('count-completed').textContent = approvedCount + rejectedCount;
+		document.getElementById('count-total').textContent = totalCount;
+
+	} catch (error) {
+		console.error("월별 통계 집계 오류:", error);
+		showError("통계를 불러오는 중 오류가 발생했습니다.");
+	}
+}
 
 // 오늘 날짜 포맷
 function getTodayString() {
@@ -201,5 +327,8 @@ async function loadAndRenderBrandData() {
 	}
 }
 
+
+// 실행
+updateMonthlyStats();
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', loadAndRenderBrandData);

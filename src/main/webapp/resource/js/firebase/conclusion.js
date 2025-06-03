@@ -1,4 +1,4 @@
-import { getFirestore, Timestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { Timestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 import { db } from './firebase-init.js';
 
 // 파라미터 추출
@@ -68,7 +68,7 @@ async function renderConclusionDetail() {
 	}
 
 	try {
-		const docRef = doc(db, 'Conclusion', reportId);
+		const docRef = doc(db, "Conclusion", reportId);
 		const docSnap = await getDoc(docRef);
 		if (!docSnap.exists()) {
 			document.getElementById('conclusion-detail-list').innerHTML = `<div class="error">데이터가 없습니다.</div>`;
@@ -100,7 +100,7 @@ async function renderConclusionDetail() {
 		const fileId = reportId.replace(/^conclusion_/, '');
 		const fileName = `${fileId}.jpg`;
 		const bucket = "capstone-ce8e9.firebasestorage.app";
-		const path = `conclusion/${fileName}`;
+		const path = `Conclusion/${fileName}`;
 		const encodedPath = encodeURIComponent(path);
 		const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodedPath}?alt=media`;
 
